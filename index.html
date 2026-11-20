@@ -1128,11 +1128,42 @@ body::before {content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
 
 
 /* 0.8 iOS inspired single-scene flashcards and glass slider */
-.nav{padding:7px;border-radius:35px;background:rgba(41,37,35,.47)!important;border:1px solid rgba(255,255,255,.21)!important;box-shadow:0 14px 38px rgba(0,0,0,.37),inset 0 1px rgba(255,255,255,.14)!important;backdrop-filter:blur(36px) saturate(165%)!important;-webkit-backdrop-filter:blur(36px) saturate(165%)!important;}
-.nav-inner{isolation:isolate;}
-.nav-slider{position:absolute;z-index:-1;left:0;top:0;height:100%;width:20%;border-radius:27px;background:linear-gradient(155deg,rgba(255,247,233,.23),rgba(178,164,147,.14) 60%,rgba(255,209,155,.1));border:1px solid rgba(255,238,210,.22);box-shadow:inset 0 1px rgba(255,255,255,.33),0 3px 12px rgba(0,0,0,.17);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .57s cubic-bezier(.2,.86,.2,1),width .35s ease;pointer-events:none;}
-.nav button.active{background:transparent!important;box-shadow:none!important;color:#ffe3bb!important;}
-.nav button{z-index:1;transition:color .36s ease!important;}
+/* 0.9: one continuous iOS-like glass dock with a floating, elastic lens. */
+.nav {
+  bottom:calc(9px + env(safe-area-inset-bottom));width:min(590px,calc(100% - 28px));
+  padding:5px!important;border-radius:999px!important;overflow:visible;
+  background:linear-gradient(168deg,rgba(114,107,105,.22),rgba(43,40,43,.50) 45%,rgba(30,29,31,.63))!important;
+  border:1px solid rgba(255,255,255,.22)!important;
+  box-shadow:0 12px 35px rgba(0,0,0,.43),inset 0 1.5px rgba(255,255,255,.22),inset 0 -1px rgba(255,255,255,.045)!important;
+  -webkit-backdrop-filter:blur(34px) saturate(175%)!important;backdrop-filter:blur(34px) saturate(175%)!important;
+  touch-action:none;-webkit-user-select:none;user-select:none;
+}
+.nav::before{border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.12),transparent 36%,rgba(255,255,255,.035))!important}
+.nav-inner{isolation:isolate;height:57px;align-items:stretch;}
+.nav-slider {
+  position:absolute;left:0;top:2px;height:calc(100% - 4px);width:20%;z-index:-1;pointer-events:none;
+  border-radius:999px;
+  background:radial-gradient(ellipse 75% 100% at 50% 36%,rgba(255,233,191,.31),rgba(215,175,127,.18) 58%,rgba(190,158,145,.10) 100%);
+  border:1px solid rgba(255,237,209,.27);
+  box-shadow:inset 0 1px rgba(255,255,255,.42),inset 0 -2px 8px rgba(71,40,26,.12),0 0 14px rgba(255,205,145,.10);
+  -webkit-backdrop-filter:blur(12px) saturate(165%);backdrop-filter:blur(12px) saturate(165%);
+  transform:translate3d(0,0,0);will-change:transform,width;
+  transition:transform .58s cubic-bezier(.19,1.12,.29,1),width .58s cubic-bezier(.18,1,.34,1);
+}
+.nav-slider::before {content:"";position:absolute;inset:-5px -7px;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(ellipse,rgba(255,200,136,.23),transparent 70%);filter:blur(9px);opacity:.82}
+.nav button{z-index:1;justify-content:center;gap:2px;padding:5px 1px!important;min-height:57px;
+  color:rgba(231,219,213,.62)!important;background:transparent!important;box-shadow:none!important;
+  font-size:9.5px;font-weight:630;letter-spacing:-.12px;transition:color .37s ease!important;}
+.nav button .ni{font-size:20px;line-height:23px;transition:transform .6s cubic-bezier(.16,1.2,.3,1),filter .35s ease!important;}
+.nav button.active{color:#fff2dd!important}
+.nav button.active .ni{transform:translateY(-1px) scale(1.05);filter:drop-shadow(0 0 6px rgba(255,210,149,.30))}
+.nav button:active{transform:none!important}
+.nav.is-dragging .nav-slider{transition:none!important}
+.nav.is-dragging button{transition:color .18s ease!important}
+.session-endcap{pointer-events:none;color:#ffd9a1}
+@media(prefers-reduced-motion:reduce){.nav-slider,.nav button,.nav button .ni{transition:none!important}}
+
 .suggestion-row{animation:none!important;transition:opacity .18s ease,transform .22s ease;}
 .suggestion-row.is-replacing{opacity:0;transform:translateX(-10px);}
 .suggestion-row.is-appearing{animation:rowSoftIn .4s cubic-bezier(.17,.8,.2,1) both!important;}
@@ -1211,7 +1242,7 @@ body:has(#practice.flash-focus) .top,body:has(#practice.flash-focus) .nav,body:h
 <div class="card" style="margin-top:14px"><div class="card-head"><span>Недавно добавлено</span><button class="link" onclick="showPage('dictionary')">Весь словарь →</button></div><div id="recentList"></div></div></section>
 <section id="dictionary" class="page"><div class="section-title">Словарь</div><div class="search"><span>⌕</span><input id="wordSearch" placeholder="Поиск слова или перевода..." oninput="renderDictionary()"></div><div class="filters" id="categoryFilters"></div><div id="categorySuggestions"></div><div class="card" style="padding:5px 16px"><div class="card-head" style="padding:12px 0 4px;margin:0"><span id="dictCount">Все слова</span><button class="link" onclick="toggleSort()" id="sortLabel">A–Z ↕</button></div><div id="wordList"></div></div></section>
 <section id="phrases" class="page"><div class="section-title">Фразы и выражения</div><div class="search"><span>⌕</span><input id="phraseSearch" placeholder="Найти фразу..." oninput="renderPhrases()"></div><div id="phraseList" class="card" style="padding:5px 16px"></div></section>
-<section id="practice" class="page"><div class="section-title">Тренировка</div><div class="card practice-intro"><div class="card-head"><span>Твоя подготовка</span><span style="color:var(--green);font-size:12px">● В своём темпе</span></div><div style="display:flex;align-items:center;gap:15px"><div style="font-size:35px">🧠</div><div><b>Закрепляй знания</b><div class="sub" style="margin-top:4px">Выбери режим и потренируй слова из своего словаря.</div></div></div></div><div class="mode-grid"><button class="mode" onclick="startPractice('flash')"><div class="mi">🃏</div><b>Карточки</b><small>Вспоминай перевод</small></button><button class="mode" onclick="startPractice('choice')"><div class="mi">☑️</div><b>Выбор ответа</b><small>Проверь себя</small></button><button class="mode" onclick="startPractice('typing')"><div class="mi">⌨️</div><b>Написание</b><small>Вспомни английское слово</small></button><button class="mode" onclick="startPractice('audio')"><div class="mi">🔊</div><b>На слух</b><small>Узнай слово по звучанию</small></button></div><div id="flashCategoryPicker" class="flash-category-picker hidden"></div><div id="practiceArea" class="card hidden" style="margin-top:14px"></div><div class="card practice-knowledge" style="margin-top:14px"><div class="card-head"><span>Мои знания</span></div><div class="sub" id="knowledgeText">Добавь первые слова, чтобы увидеть статистику.</div></div></section>
+<section id="practice" class="page"><div class="section-title">Тренировка</div><div class="card practice-intro"><div class="card-head"><span>Твоя подготовка</span><span style="color:var(--green);font-size:12px">● В своём темпе</span></div><div style="display:flex;align-items:center;gap:15px"><div style="font-size:35px">🧠</div><div><b>Закрепляй знания</b><div class="sub" style="margin-top:4px">Выбери режим и потренируй слова из своего словаря.</div></div></div></div><div class="mode-grid"><button class="mode" onclick="startPractice('flash')"><div class="mi">🃏</div><b>Карточки</b><small>Вспоминай перевод</small></button><button class="mode" onclick="startPractice('choice')"><div class="mi">☑️</div><b>Выбор ответа</b><small>Проверь себя</small></button><button class="mode" onclick="startPractice('typing')"><div class="mi">⌨️</div><b>Написание</b><small>Вспомни английское слово</small></button></div><div id="flashCategoryPicker" class="flash-category-picker hidden"></div><div id="practiceArea" class="card hidden" style="margin-top:14px"></div><div class="card practice-knowledge" style="margin-top:14px"><div class="card-head"><span>Мои знания</span></div><div class="sub" id="knowledgeText">Добавь первые слова, чтобы увидеть статистику.</div></div></section>
 <section id="settings" class="page"><div class="section-title">Настройки</div><div class="card"><div class="card-head">Мои данные</div><div class="sub">Словарь хранится на этом устройстве. Регулярно сохраняй резервную копию.</div><div class="setting-row"><div><b>Экспорт словаря</b><div class="sub">Скачать файл JSON</div></div><button class="secondary" onclick="exportData()">Экспорт</button></div><div class="setting-row"><div><b>Импорт словаря</b><div class="sub">Восстановить из файла</div></div><button class="secondary" onclick="document.getElementById('importFile').click()">Импорт</button><input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)"></div><div class="setting-row"><div><b>Очистить словарь</b><div class="sub">Удалить все записи</div></div><button class="outline" onclick="clearData()">Очистить</button></div></div><div class="card"><div class="card-head">О Vocabulary</div><div class="sub">Версия 0.8 · Персональный английский словарь</div><div class="sub" style="margin-top:9px">Первый прототип. Данные сохраняются локально в браузере. Не очищай данные сайта без предварительного экспорта.</div></div></section>
 </div>
 <button class="fab" id="fab" onclick="openForm('word')">＋</button>
@@ -1221,7 +1252,50 @@ body:has(#practice.flash-focus) .top,body:has(#practice.flash-focus) .nav,body:h
 <script>
 const CATS=['Семья и родственники','Дом и интерьер','Еда и рестораны','Путешествия','Общение','Работа и профессия','Эмоции и чувства','Природа','Здоровье','Другое'];let db=JSON.parse(localStorage.getItem('vocabulary-db')||'{"words":[],"phrases":[]}');if(!db.words)db={words:[],phrases:[]};let sortAsc=true,activeCat='Все',practiceItems=[],practiceIndex=0,practiceMode='flash',flipped=false,correctCount=0;let selectedPracticeCategory=0,activePracticeCategory='Все слова',carouselPointerStart=null,carouselDragged=false;let flashAwaitingNext=false,flashTransitioning=false,flashDragState=null,timedLaunching=false;let timedMode=false,timedDuration=60,activeTimedDuration=60,timedSessionActive=false,timedEndsAt=0,timedInterval=null,lastTimerSecond=null,timedDragState=null,timedDragConsumed=false;
 const $=id=>document.getElementById(id);function persist(){localStorage.setItem('vocabulary-db',JSON.stringify(db));renderAll()}function toast(s){$('toast').textContent=s;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
-function updateNavSlider(){const inner=document.querySelector('.nav-inner'),active=inner?.querySelector('button.active'),slider=inner?.querySelector('.nav-slider');if(!active||!slider)return;slider.style.transform=`translate3d(${active.offsetLeft}px,0,0)`;slider.style.width=active.offsetWidth+'px';}
+function updateNavSlider(){
+  const inner=document.querySelector('.nav-inner'),active=inner?.querySelector('button.active'),slider=inner?.querySelector('.nav-slider');
+  if(!active||!slider||document.querySelector('.nav.is-dragging'))return;
+  slider.style.transform=`translate3d(${active.offsetLeft}px,0,0)`;
+  slider.style.width=active.offsetWidth+'px';
+}
+/* Drag the glass lens directly across the navigation like a physical pill. */
+(function setupGlassDock(){
+  const nav=document.querySelector('.nav'),inner=nav?.querySelector('.nav-inner'),slider=nav?.querySelector('.nav-slider');
+  if(!nav||!inner||!slider)return;
+  let pointer=null,startX=0,dragged=false,target=null;
+  const tabs=()=>[...inner.querySelectorAll('button[data-page]')];
+  function closestAt(clientX){const rect=inner.getBoundingClientRect();let item=null,delta=Infinity;
+    for(const b of tabs()){const mid=rect.left+b.offsetLeft+b.offsetWidth/2;const d=Math.abs(clientX-mid);if(d<delta){delta=d;item=b}}
+    return item;
+  }
+  nav.addEventListener('pointerdown',e=>{
+    if(e.button!==0&&e.pointerType==='mouse')return;
+    if(!e.target.closest('button[data-page]'))return;
+    pointer=e.pointerId;startX=e.clientX;dragged=false;target=e.target.closest('button[data-page]');
+    // Keep native tap targets intact; capture only after the finger begins dragging.
+  });
+  nav.addEventListener('pointermove',e=>{
+    if(e.pointerId!==pointer)return;
+    if(Math.abs(e.clientX-startX)>7&&!dragged){dragged=true;nav.setPointerCapture(e.pointerId)}
+    if(!dragged)return;
+    nav.classList.add('is-dragging');
+    target=closestAt(e.clientX);
+    if(!target)return;
+    const bounds=inner.getBoundingClientRect(),x=Math.max(0,Math.min(inner.clientWidth-target.offsetWidth,e.clientX-bounds.left-target.offsetWidth/2));
+    slider.style.transform=`translate3d(${x}px,0,0)`;slider.style.width=target.offsetWidth+'px';
+    tabs().forEach(b=>b.classList.toggle('active',b===target));
+  });
+  function finish(e){if(e.pointerId!==pointer)return;pointer=null;
+    if(nav.hasPointerCapture(e.pointerId))nav.releasePointerCapture(e.pointerId);
+    nav.classList.remove('is-dragging');
+    if(dragged&&target){window.__dockSuppressClick=true;showPage(target.dataset.page);
+      setTimeout(()=>{window.__dockSuppressClick=false},0);
+    }else {tabs().forEach(b=>b.classList.toggle('active',b.dataset.page===document.querySelector('.page.active')?.id));}
+    requestAnimationFrame(updateNavSlider);dragged=false;target=null;
+  }
+  nav.addEventListener('pointerup',finish);nav.addEventListener('pointercancel',finish);
+  nav.addEventListener('click',e=>{if(window.__dockSuppressClick){e.stopImmediatePropagation();e.preventDefault();}},true);
+})();
 window.addEventListener('resize',updateNavSlider,{passive:true});window.addEventListener('load',()=>requestAnimationFrame(updateNavSlider));
 function showPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(p).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));$('fab').style.display=['home','dictionary','phrases'].includes(p)?'block':'none';if(p==='dictionary')renderDictionary();if(p==='phrases')renderPhrases();if(p==='home')renderHome();if(p!=='practice')$('practice').classList.remove('flash-focus');requestAnimationFrame(updateNavSlider)}
 let transcriptionRequest=0;
@@ -1300,7 +1374,7 @@ async function addSuggestedWord(term,translation,category,row){
 }
 function toggleSort(){sortAsc=!sortAsc;renderDictionary()}
 function renderPhrases(){let q=($('phraseSearch')?.value||'').toLowerCase();let a=db.phrases.filter(x=>(`${x.term} ${x.translation}`).toLowerCase().includes(q)).sort((x,y)=>x.term.localeCompare(y.term));$('phraseList').innerHTML=a.map(entryHTML).join('')||'<div class="empty"><div class="big">💬</div>Здесь будут твои выражения и устойчивые фразы.</div>'}
-function openDetail(id){let x=[...db.words,...db.phrases].find(e=>e.id===id);if(!x)return;$('detailContent').innerHTML=`<div class="detail-word">${esc(x.term)}</div><div class="detail-trans">${esc(x.translation)}</div>${x.transcription?`<div class="pill">${esc(x.transcription)}</div>`:''}<div class="sub" style="margin-top:17px">КАТЕГОРИЯ</div><b>${esc(x.category||'Без категории')}</b>${x.example?`<div class="sub" style="margin-top:17px">ПРИМЕР</div><div style="margin-top:5px">${esc(x.example)}</div>`:''}<div class="form-actions" style="margin-top:24px"><button class="outline" onclick="speak('${esc(x.term).replace(/'/g,"\\'")}')">🔊 Слушать</button><button class="secondary" onclick="editEntry('${id}')">Изменить</button><button class="outline" onclick="deleteEntry('${id}')">Удалить</button></div>`;$('detailModal').classList.add('show')}function closeDetail(){$('detailModal').classList.remove('show')}function editEntry(id){let type=db.words.some(x=>x.id===id)?'word':'phrase';closeDetail();openForm(type,id)}function deleteEntry(id){if(!confirm('Удалить эту запись?'))return;db.words=db.words.filter(x=>x.id!==id);db.phrases=db.phrases.filter(x=>x.id!==id);closeDetail();persist();toast('Запись удалена')}function speak(t){if(!('speechSynthesis'in window))return toast('Озвучивание не поддерживается');let u=new SpeechSynthesisUtterance(t);u.lang='en-US';speechSynthesis.speak(u)}
+function openDetail(id){let x=[...db.words,...db.phrases].find(e=>e.id===id);if(!x)return;$('detailContent').innerHTML=`<div class="detail-word">${esc(x.term)}</div><div class="detail-trans">${esc(x.translation)}</div>${x.transcription?`<div class="pill">${esc(x.transcription)}</div>`:''}<div class="sub" style="margin-top:17px">КАТЕГОРИЯ</div><b>${esc(x.category||'Без категории')}</b>${x.example?`<div class="sub" style="margin-top:17px">ПРИМЕР</div><div style="margin-top:5px">${esc(x.example)}</div>`:''}<div class="form-actions" style="margin-top:24px"><button class="secondary" onclick="editEntry('${id}')">Изменить</button><button class="outline" onclick="deleteEntry('${id}')">Удалить</button></div>`;$('detailModal').classList.add('show')}function closeDetail(){$('detailModal').classList.remove('show')}function editEntry(id){let type=db.words.some(x=>x.id===id)?'word':'phrase';closeDetail();openForm(type,id)}function deleteEntry(id){if(!confirm('Удалить эту запись?'))return;db.words=db.words.filter(x=>x.id!==id);db.phrases=db.phrases.filter(x=>x.id!==id);closeDetail();persist();toast('Запись удалена')}
 function startPractice(mode){
   if(mode==='flash'){showFlashCategoryPicker();return}
   stopTimedClock();timedSessionActive=false;timedMode=false;resetTimedCardDrag();
@@ -1529,13 +1603,13 @@ function renderPractice(){
     const indexText=timedSessionActive?'НА ВРЕМЯ · '+esc(activePracticeCategory):'КАРТОЧКИ · '+esc(activePracticeCategory);
     const timeText=timedSessionActive?`<div class="swipe-timer-wrap"><span class="timer-pill" id="practiceTimer">${formatTimer(Math.max(0,(timedEndsAt-Date.now())/1000))}</span><div class="timer-progress"><span id="practiceTimerProgress" style="width:100%"></span></div></div>`:'';
     const progressPct=practiceIndex/practiceItems.length*100;
-    area.innerHTML=`<div class="swipe-session-head"><button class="glass-circle" type="button" onclick="closePracticeSession()" aria-label="Закрыть тренировку">‹</button><div class="swipe-session-title">${indexText}<span class="swipe-session-sub">${practiceIndex+1} / ${count}</span></div><button type="button" class="glass-circle" onclick="speakCurrentFlashWord()" aria-label="Произнести слово">♫</button></div>
+    area.innerHTML=`<div class="swipe-session-head"><button class="glass-circle" type="button" onclick="closePracticeSession()" aria-label="Закрыть тренировку">‹</button><div class="swipe-session-title">${indexText}<span class="swipe-session-sub">${practiceIndex+1} / ${count}</span></div><span class="glass-circle session-endcap" aria-hidden="true">✦</span></div>
        <div class="swipe-progress"><span style="width:${progressPct}%"></span></div>${timeText}
        <div class="swipe-deck" id="swipeDeck" data-drag="none"><div class="swipe-ambient"></div><div class="swipe-deck-back back-two"></div><div class="swipe-deck-back"></div>
          <div class="swipe-edge left"><div class="edge-symbol">←<small>Не знаю</small></div></div>
          <div class="swipe-edge right"><div class="edge-symbol">→<small>Знаю</small></div></div>
          <div class="swipe-card" id="swipeCard" role="button" tabindex="0" aria-label="${esc(x.term)}. Смахни вправо, если знаешь, или влево, чтобы узнать перевод" onpointerdown="flashPointerDown(event)" onpointermove="flashPointerMove(event)" onpointerup="flashPointerUp(event)" onpointercancel="flashPointerCancel(event)" onkeydown="flashCardKeydown(event)">
-          <div class="swipe-card-speaker" aria-hidden="true">♫</div><div class="swipe-word">${esc(x.term)}</div>
+          <div class="swipe-word">${esc(x.term)}</div>
           <div class="swipe-answer"><div class="translation">${esc(x.translation)}</div>${x.transcription?`<div class="transcription">${esc(x.transcription)}</div>`:''}</div></div>
        </div>
        <div class="swipe-help" id="flashHelp">Вправо — знаю · Влево — покажи перевод</div>
@@ -1545,13 +1619,12 @@ function renderPractice(){
     return;
   }
   if(practiceMode==='typing'){area.innerHTML=head+`<div class="flash"><div class="flash-hint">НАПИШИ ПО-АНГЛИЙСКИ</div><div class="flash-word">${esc(x.translation)}</div><input id="typedAnswer" placeholder="Твой ответ" class="typed-answer" style="width:100%;padding:14px;border:1px solid var(--line);border-radius:var(--radius-control);text-align:center" autocapitalize="none"><button class="primary full" style="margin-top:12px" onclick="checkTyped()">Проверить</button><div id="typedResult" style="margin-top:12px"></div></div>`;return}
-  if(practiceMode==='audio'){area.innerHTML=head+`<div class="flash"><div class="flash-hint">ПРОСЛУШАЙ И ВСПОМНИ ПЕРЕВОД</div><button class="secondary" style="font-size:26px;padding:20px" onclick="speak('${esc(x.term).replace(/'/g,"\\'")}')">🔊</button><div class="sub">Нажми, чтобы прослушать слово</div><button class="secondary" style="margin-top:20px" onclick="flipped=!flipped;renderPractice()">${flipped?esc(x.translation):'Показать перевод'}</button></div>${flipped?`<div class="row2"><button class="outline" onclick="rateAnswer(false)">Не знал</button><button class="primary" onclick="rateAnswer(true)">Угадал</button></div>`:''}`;return}
   let opts=[x,...db.words.filter(y=>y.id!==x.id).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);area.innerHTML=head+`<div class="flash" style="min-height:150px"><div class="flash-hint">ВЫБЕРИ ПРАВИЛЬНЫЙ ПЕРЕВОД</div><div class="flash-word">${esc(x.term)}</div></div>${opts.map(o=>`<button class="answer full" onclick="chooseAnswer('${o.id}','${x.id}',this)">${esc(o.translation)}</button>`).join('')}`
 }
 
 
 /* Right = learned, left = unfamiliar; unfamiliar reveals translation before advancing. */
-function speakCurrentFlashWord(){const x=practiceItems[practiceIndex];if(x)speak(x.term)}
+
 function rememberFlashAnswer(known){
   const x=practiceItems[practiceIndex];if(!x)return;
   if(known){x.correct=(x.correct||0)+1;x.level=Math.min(5,(x.level||0)+1);correctCount++}

@@ -1,4 +1,4 @@
-Vocabulary 0.8 — iPhone PWA
+Vocabulary 0.9 — iPhone PWA
 
 Загрузите файлы из этой папки в корень существующего репозитория GitHub Pages, заменив старые файлы. Не загружайте ZIP целиком.
 
