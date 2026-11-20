@@ -1231,6 +1231,119 @@ body:has(#practice.flash-focus) .top,body:has(#practice.flash-focus) .nav,body:h
 @media(max-height:680px){.focus-scene .category-card{top:calc(44% - 125px)!important;height:250px!important;}.focus-scene.is-timed .category-card{top:calc(39% - 125px)!important;}.focus-scene .category-center-icon{font-size:37px;}.focus-scene .carousel-stage.timer-mode .activation-drive{bottom:calc(env(safe-area-inset-bottom) + 122px)}.focus-scene .focus-bottom{bottom:calc(env(safe-area-inset-bottom) + 13px)}#practice.flash-focus .swipe-deck{top:calc(49% - 155px)}}
 @media(prefers-reduced-motion:reduce){.nav-slider,.focus-scene .category-card{transition:none!important}}
 
+
+/* Vocabulary 1.0: reference-aligned theatrical timed card scene */
+.focus-scene.is-timed {
+ background:radial-gradient(ellipse 70% 56% at 50% 53%, #462512 0%,#21130d 55%,#0d0908 95%)!important;
+}
+.focus-scene.is-timed::before {
+ background:radial-gradient(ellipse 60% 31% at 50% 65%,rgba(227,124,33,.18),transparent 83%),
+ radial-gradient(ellipse 55% 18% at 50% 21%,rgba(232,138,39,.12),transparent 100%);
+}
+.focus-scene.is-timed .focus-heading{top:calc(env(safe-area-inset-top) + 16px);padding:0 7px;}
+.focus-scene.is-timed .focus-label{text-align:left;align-items:flex-start;padding-left:4px;}
+.focus-scene.is-timed .focus-label strong{font-size:26px;font-weight:730;letter-spacing:-.7px;color:#fff0d9;}
+.focus-scene.is-timed .focus-label span{font-size:12px;color:#d5b699;}
+.focus-scene.is-timed .focus-heading .picker-back:first-child{display:none;}
+.focus-scene.is-timed .focus-heading .picker-back:last-child{font-size:22px;}
+.focus-scene.is-timed .carousel-stage.timer-mode{isolation:isolate;--pull:0;--charge:0;}
+.focus-scene.is-timed .category-card.is-center {
+ top:clamp(160px,23.5dvh,246px)!important;
+ width:min(298px,72vw)!important;
+ height:clamp(270px,37dvh,348px)!important;
+ padding:25px 18px!important;
+ border-radius:42px!important;
+ border:2px solid rgba(255,215,129,.90)!important;
+ background:radial-gradient(ellipse at 35% 4%,rgba(255,231,169,.29),transparent 65%),linear-gradient(155deg,rgba(160,106,55,.88),rgba(104,62,31,.92) 58%,rgba(81,47,26,.95))!important;
+ box-shadow:0 0 4px rgba(255,238,179,.78),0 0 24px rgba(255,166,50,.62),0 0 72px rgba(237,119,23,.24),inset 0 1px rgba(255,246,209,.50),inset 0 -22px 48px rgba(54,24,12,.22)!important;
+ transform:translate3d(calc(-50% + var(--drag-x,0px)),var(--drag-y,0px),calc(55px + var(--drag-z,0px))) rotateZ(-7deg) rotateY(-3deg) scale(var(--drag-scale,1))!important;
+ gap:13px!important;
+ z-index:7!important;
+ touch-action:none;
+ transition:transform .65s cubic-bezier(.17,.88,.23,1),box-shadow .28s ease,filter .25s ease,opacity .3s ease!important;
+}
+.focus-scene.is-timed .category-card.is-center::before{background:linear-gradient(135deg,rgba(255,250,204,.20),transparent 38%,rgba(255,170,75,.04))}
+.focus-scene.is-timed .category-center-icon{font-size:62px!important;filter:drop-shadow(0 5px 12px rgba(255,196,95,.36))}
+.focus-scene.is-timed .category-name{font-size:clamp(25px,7vw,34px)!important;font-weight:780;line-height:1.05;color:#fff2da!important;text-shadow:0 2px 19px rgba(255,188,93,.2);}
+.focus-scene.is-timed .category-count{font-size:14px;background:rgba(255,235,187,.13);padding:10px 16px;border-color:rgba(255,224,171,.15);}
+.focus-scene.is-timed .category-down{font-size:43px!important;line-height:1;font-weight:700;filter:drop-shadow(0 2px 10px rgba(255,200,119,.55))}
+.focus-scene.is-timed .category-card.is-center.is-grabbed{transition:box-shadow .1s linear!important;}
+.focus-scene.is-timed .category-card.is-center.is-armed{box-shadow:0 0 7px #ffe5ae,0 0 45px rgba(255,171,59,.82),0 0 90px rgba(248,140,37,.39)!important;}
+/* The funnel is deliberately absent until an actual downward drag begins. */
+.magnetic-stream{display:none;}
+.focus-scene.is-timed .magnetic-stream{
+ display:block;position:absolute;pointer-events:none;z-index:4;
+ width:min(330px,83vw);height:clamp(92px,13dvh,135px);
+ left:50%;top:calc(clamp(160px,23.5dvh,246px) + clamp(270px,37dvh,348px) - 25px);
+ opacity:0;transform:translate3d(-50%,0,0) scaleX(.82) scaleY(.55);transform-origin:50% 0%;
+ filter:drop-shadow(0 0 18px rgba(255,171,52,.30));
+ transition:opacity .35s ease,transform .45s cubic-bezier(.2,.8,.2,1);
+}
+.focus-scene.is-timed .magnetic-stream svg{height:100%;width:100%;display:block;}
+.focus-scene.is-timed .carousel-stage.is-pulling .magnetic-stream{
+ opacity:calc(.08 + var(--pull) * .88);
+ transform:translate3d(-50%,0,0) scaleX(calc(.80 + var(--pull) * .12)) scaleY(calc(.62 + var(--pull) * .38));
+}
+.focus-scene.is-timed .carousel-stage:not(.is-pulling) .magnetic-stream{opacity:0!important;}
+/* A true illuminated oval, not a rectangular holder */
+.focus-scene.is-timed .carousel-stage.timer-mode .activation-drive{
+ display:flex;position:absolute;left:50%;top:calc(62dvh - 12px);bottom:auto!important;
+ width:min(355px,86vw);height:67px;z-index:5;
+ background:none!important;border:none!important;box-shadow:none!important;
+ transform:translateX(-50%)!important;align-items:center;justify-content:center;padding:0;
+}
+.focus-scene.is-timed .activation-drive .drive-caption{display:none;}
+.focus-scene.is-timed .activation-drive .drive-slot{
+ width:100%;height:50px!important;display:block;border:4px solid #ffbc54;border-radius:50% / 53%!important;
+ background:radial-gradient(ellipse at 50% 45%,rgba(36,17,8,.65),rgba(16,9,7,.92) 70%)!important;
+ box-shadow:0 0 3px 1px #ffe59a,0 0 15px 4px rgba(255,180,56,.82),0 0 40px 9px rgba(248,127,25,.44),0 6px 22px rgba(255,154,24,.47),inset 0 0 13px rgba(255,165,40,.50)!important;
+ transform:scaleX(calc(1 + var(--charge) * .075))!important;
+ transition:box-shadow .20s ease,transform .20s ease!important;
+}
+.focus-scene.is-timed .activation-drive .drive-slot::before{inset:2px;border-radius:inherit;background:linear-gradient(90deg,rgba(255,200,83,.12),rgba(255,228,156,.20),rgba(255,178,57,.15));opacity:.42;filter:blur(6px)}
+.focus-scene.is-timed .activation-drive .drive-slot::after{width:110%;height:55px;top:20px;opacity:calc(.26 + var(--charge) * .65);background:rgba(255,145,34,.50);filter:blur(24px)}
+.focus-scene.is-timed .carousel-stage.is-pulling .drive-slot{
+ box-shadow:0 0 5px 2px #ffefbf,0 0 calc(15px + var(--charge)*35px) 8px rgba(255,181,64,.92),0 0 calc(32px + var(--charge)*52px) 14px rgba(250,132,22,.53),inset 0 0 17px rgba(255,183,64,.72)!important;
+}
+/* Independent, compact controls like the approved reference */
+.focus-scene.is-timed .focus-bottom{
+ bottom:calc(env(safe-area-inset-bottom) + 16px)!important;
+ left:max(28px,7vw)!important;right:max(28px,7vw)!important;gap:13px!important;
+}
+.focus-scene.is-timed .focus-hint{display:none!important;}
+.focus-scene.is-timed .timed-options{width:100%;display:flex!important;flex-direction:column;align-items:stretch;gap:17px;margin:0!important;}
+.focus-scene.is-timed .timed-mode-caption{text-align:center;font-size:18px;color:#eed2a5;font-weight:510;letter-spacing:.1px;margin:0 0 3px;}
+.focus-scene.is-timed .duration-choices{gap:10px;width:100%;}
+.focus-scene.is-timed .duration-choice{
+ min-height:49px!important;border:1px solid rgba(255,199,115,.20);border-radius:999px!important;
+ background:rgba(92,57,32,.37)!important;color:#f1d4a8!important;font-size:14px!important;font-weight:520;
+ backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+}
+.focus-scene.is-timed .duration-choice.active{
+ background:linear-gradient(135deg,rgba(151,100,42,.85),rgba(128,76,29,.76))!important;border-color:#ffc76e!important;color:#ffedb8!important;
+ box-shadow:0 0 16px rgba(255,167,37,.38),inset 0 1px rgba(255,238,183,.38)!important;
+}
+.focus-scene.is-timed .reference-start{
+ width:100%;min-height:58px;border-radius:999px;border:1.5px solid #ffc16d;
+ background:linear-gradient(175deg,rgba(172,113,55,.78),rgba(119,71,34,.75));
+ color:#ffe28d;font-size:18px;font-weight:770;letter-spacing:.3px;
+ box-shadow:0 0 12px rgba(255,180,69,.45),0 0 27px rgba(249,134,37,.24),inset 0 1px rgba(255,237,193,.38);
+ display:flex;align-items:center;justify-content:center;gap:14px;
+}
+.focus-scene.is-timed .reference-start:active{transform:scale(.98)}
+.focus-scene.is-timed .timed-cancel{font-size:11px;color:#b99876;opacity:.7;margin:-9px auto 0;padding:3px 10px;}
+@media(max-height:740px){
+ .focus-scene.is-timed .category-card.is-center{top:21dvh!important;height:33dvh!important;}
+ .focus-scene.is-timed .magnetic-stream{top:calc(21dvh + 33dvh - 25px);height:13dvh;}
+ .focus-scene.is-timed .carousel-stage.timer-mode .activation-drive{top:59dvh;}
+ .focus-scene.is-timed .focus-bottom{gap:9px!important;bottom:calc(env(safe-area-inset-bottom) + 7px)!important;}
+ .focus-scene.is-timed .timed-options{gap:10px;}
+ .focus-scene.is-timed .reference-start{min-height:48px;}
+ .focus-scene.is-timed .duration-choice{min-height:41px!important;}
+ .focus-scene.is-timed .category-center-icon{font-size:45px!important;}
+}
+@media(prefers-reduced-motion:reduce){.focus-scene.is-timed .magnetic-stream{transition:none!important;}}
+
 </style></head>
 <body>
 <div class="app">
@@ -1432,10 +1545,11 @@ function renderPracticeCategoryCarousel(){
  host.innerHTML=`<div class="focus-scene"><div class="focus-heading"><button class="picker-back" onclick="leaveFlashFocus()" aria-label="Вернуться">‹</button><div class="focus-label"><strong id="pickerTitle">Выбор категории</strong><span id="pickerSubtitle">Листай категории</span></div><button class="picker-back" type="button" onclick="openSelectedCategoryInDictionary()" aria-label="Открыть словарь">···</button></div>
  <div class="focus-ambient" aria-hidden="true"></div>
  <div class="carousel-stage" id="categoryCarousel" role="group" aria-label="Категории" tabindex="0" onpointerdown="carouselPointerDown(event)" onpointerup="carouselPointerUp(event)" onpointercancel="carouselPointerCancel()" onkeydown="carouselKeydown(event)">${cardHtml}
- <div class="activation-drive" id="activationDrive" aria-hidden="true"><div class="drive-caption">ПОТЯНИ КАРТОЧКУ В СЛОТ</div><div class="drive-slot" id="activationDriveSlot"></div></div></div>
+ <div class="magnetic-stream" aria-hidden="true"><svg viewBox="0 0 340 280" preserveAspectRatio="none"><defs><linearGradient id="beamGlow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffdf9e" stop-opacity=".06"/><stop offset=".55" stop-color="#ffc46c" stop-opacity=".58"/><stop offset="1" stop-color="#ffbc4d" stop-opacity=".84"/></linearGradient><filter id="beamBlur"><feGaussianBlur stdDeviation="9"/></filter></defs><g filter="url(#beamBlur)" opacity=".8"><path d="M38 2 C78 100 94 204 95 277 L245 277 C246 195 256 106 304 2Z" fill="url(#beamGlow)"/></g><path d="M45 0 C87 76 96 175 104 275" fill="none" stroke="#ffdb8d" stroke-width="5" opacity=".70"/><path d="M296 0 C256 76 246 175 236 275" fill="none" stroke="#ffe3a0" stroke-width="5" opacity=".70"/><path d="M84 0 C114 98 129 211 130 278" fill="none" stroke="#ffda86" stroke-width="2" opacity=".42"/><path d="M259 0 C229 99 213 211 210 278" fill="none" stroke="#ffd478" stroke-width="2" opacity=".42"/></svg></div>
+ <div class="activation-drive" id="activationDrive" aria-hidden="true"><div class="drive-caption">ПЕРЕТАЩИ КАРТОЧКУ</div><div class="drive-slot" id="activationDriveSlot"></div></div></div>
  <div class="focus-bottom" id="categorySelection"><div class="carousel-controls" id="carouselControls"><button class="carousel-arrow" onclick="movePracticeCategory(-1)">‹</button><div class="carousel-dots">${cards.map((_,i)=>`<button class="carousel-dot ${i===selectedPracticeCategory?'active':''}" aria-label="Категория ${i+1}" onclick="selectPracticeCategory(${i})"></button>`).join('')}</div><button class="carousel-arrow" onclick="movePracticeCategory(1)">›</button></div><div class="focus-category-name" id="selectedCategoryName">${esc(selected.name)}</div><div id="selectedCategoryCount" class="focus-category-count">${wordCountLabel(selected.count)}</div>
  <div id="selectedCategoryHint" class="focus-hint"></div><div class="selection-actions"><button class="primary category-start" id="selectedCategoryAction" onclick="beginFlashPractice()">Начать</button><button class="timed-mode-button" id="timedModeButton" onclick="toggleTimedMode(true)">◷ На время</button></div>
- <div id="timedOptions" class="timed-options hidden"><div class="duration-choices"><button class="duration-choice" data-duration="30" onclick="setTimedDuration(30)">30 сек</button><button class="duration-choice" data-duration="60" onclick="setTimedDuration(60)">60 сек</button><button class="duration-choice" data-duration="90" onclick="setTimedDuration(90)">90 сек</button></div><button class="timed-cancel" onclick="toggleTimedMode(false)">Отменить режим на время</button></div></div></div>`;
+ <div id="timedOptions" class="timed-options hidden"><div class="timed-mode-caption">◷ &nbsp; Timed mode</div><div class="duration-choices"><button class="duration-choice" data-duration="30" onclick="setTimedDuration(30)">30 сек</button><button class="duration-choice" data-duration="60" onclick="setTimedDuration(60)">60 сек</button><button class="duration-choice" data-duration="90" onclick="setTimedDuration(90)">90 сек</button></div><button class="reference-start" onclick="startTimedFromButton()"><span aria-hidden="true">▶</span> Start</button><button class="timed-cancel" onclick="toggleTimedMode(false)">Обычный режим</button></div></div></div>`;
  requestAnimationFrame(updatePracticeCategoryCarousel);
 }
 function updatePracticeCategoryCarousel(){
@@ -1455,8 +1569,8 @@ function updatePracticeCategoryCarousel(){
   $('carouselControls')?.classList.toggle('hidden',timedMode);
   $('categorySelection')?.classList.toggle('timed-active',timedMode);document.querySelector('.focus-scene')?.classList.toggle('is-timed',timedMode);
   $('timedOptions')?.classList.toggle('hidden',!timedMode);
-  $('pickerTitle').textContent=timedMode?'Режим на время':'Выбери категорию';
-  $('pickerSubtitle').textContent=timedMode?'Потяни карточку вниз':'Смахивай карточки в стороны';
+  $('pickerTitle').textContent=timedMode?'Vocabulary':'Выбери категорию';
+  $('pickerSubtitle').textContent=timedMode?'Start a timed flashcard session':'Смахивай карточки в стороны';
   $('selectedCategoryName').textContent=selected.name;
   $('selectedCategoryCount').textContent=wordCountLabel(selected.count);
   $('selectedCategoryHint').textContent=timedMode?'Зажми карточку и перемести её в светящийся слот внизу.':(selected.count?'Карточки будут только из этой категории.':'В этой категории пока нет слов. Можно подобрать новые в словаре.');
@@ -1489,6 +1603,7 @@ function toggleTimedMode(force){
   if(next&&!(practiceCategoryMeta(practiceCategoryList()[selectedPracticeCategory]||'Все слова').count)){toast('В этой категории пока нет слов');return}
   timedMode=next;resetTimedCardDrag();updatePracticeCategoryCarousel();
 }
+function startTimedFromButton(){if(!timedMode||timedLaunching)return;timedLaunching=true;const stage=$('categoryCarousel');stage?.classList.add('drive-fired');stage?.style.setProperty('--charge','1');const card=stage?.querySelector('.category-card.is-center');card?.classList.add('is-launching');setTimeout(()=>{if(timedLaunching){timedLaunching=false;launchTimedFlashPractice()}},500)}
 function setTimedDuration(seconds){timedDuration=seconds;$('timedOptions').querySelectorAll('.duration-choice').forEach(button=>button.classList.toggle('active',Number(button.dataset.duration)===seconds));}
 function resetTimedCardDrag(){
   timedLaunching=false;
@@ -1496,7 +1611,7 @@ function resetTimedCardDrag(){
   if(state?.card){const card=state.card;card.classList.remove('is-grabbed','is-dragging','is-armed','is-launching');
     for(const prop of ['--drag-x','--drag-y','--drag-z'])card.style.setProperty(prop,'0px');card.style.setProperty('--drag-scale','1');}
   timedDragState=null;
-  const stage=$('categoryCarousel');if(stage){stage.classList.remove('drive-ready','drive-fired');stage.style.setProperty('--charge','0')}
+  const stage=$('categoryCarousel');if(stage){stage.classList.remove('drive-ready','drive-fired','is-pulling');stage.style.setProperty('--charge','0');stage.style.setProperty('--pull','0')}
 }
 function categoryCardPointerDown(event,index){
   if(!timedMode||index!==selectedPracticeCategory||timedSessionActive||timedLaunching)return;
@@ -1512,16 +1627,17 @@ function categoryCardPointerMove(event){
   const dx=event.clientX-state.startX,dy=event.clientY-state.startY;
   const baseY=Math.max(0,Math.min(Math.max(210,stage.clientHeight*.56),dy));
   const cardRect=state.card.getBoundingClientRect(),slotRect=slot.getBoundingClientRect();
-  const remainingGap=Math.max(0,state.initialGap-baseY);
-  const approachDistance=Math.max(76,state.initialGap+15);
-  const charge=Math.max(0,Math.min(1,(approachDistance-remainingGap)/approachDistance));
+  // Measure the travel toward the oval, not the visible gap (the tilted card can overlap it).
+  // This prevents the glow from jumping instantly to full intensity on the first pixel.
+  const approachDistance=Math.max(125,Math.min(250,slotRect.top-cardRect.top-cardRect.height*.32));
+  const charge=Math.max(0,Math.min(1,(baseY-6)/approachDistance));
   const magnetX=(slotRect.left+slotRect.width/2)-(cardRect.left+cardRect.width/2);
   const adjustedX=Math.max(-45,Math.min(45,dx*.22+magnetX*charge*.17));
   const adjustedY=baseY+charge*12;
   state.card.style.setProperty('--drag-y',adjustedY+'px');
   state.card.style.setProperty('--drag-x',adjustedX+'px');
   state.card.style.setProperty('--drag-scale',String(1-.08*charge));
-  stage.style.setProperty('--charge',charge.toFixed(3));state.charge=charge;
+  stage.style.setProperty('--charge',charge.toFixed(3));state.charge=charge;if(dy>6){stage.classList.add('is-pulling');stage.style.setProperty('--pull',Math.max(.08,charge).toFixed(3))}else{stage.classList.remove('is-pulling');stage.style.setProperty('--pull','0')}
   if(dy>7){state.moved=true;state.card.classList.add('is-dragging')}
   state.armed=charge>.82&&dy>65;
   state.card.classList.toggle('is-armed',state.armed);
@@ -1534,7 +1650,7 @@ function categoryCardPointerUp(event){
   timedDragState=null;
   if(armed){
     timedLaunching=true;timedDragConsumed=true;const stage=$('categoryCarousel');
-    stage.classList.add('drive-fired');stage.style.setProperty('--charge','1');
+    stage.classList.add('drive-fired','is-pulling');stage.style.setProperty('--charge','1');stage.style.setProperty('--pull','1');
     card.classList.remove('is-grabbed');card.classList.add('is-launching');
     if(navigator.vibrate)navigator.vibrate(12);
     // Time begins only when the insertion animation has completed.
@@ -1544,8 +1660,8 @@ function categoryCardPointerUp(event){
     card.classList.remove('is-grabbed','is-dragging','is-armed');
     for(const prop of ['--drag-x','--drag-y','--drag-z'])card.style.setProperty(prop,'0px');
     card.style.setProperty('--drag-scale','1');
-    $('categoryCarousel')?.classList.remove('drive-ready');
-    $('categoryCarousel')?.style.setProperty('--charge','0');
+    $('categoryCarousel')?.classList.remove('drive-ready','is-pulling');
+    $('categoryCarousel')?.style.setProperty('--charge','0');$('categoryCarousel')?.style.setProperty('--pull','0');
     if(moved){timedDragConsumed=true;setTimeout(()=>timedDragConsumed=false,350)}
   }
 }

@@ -1,9 +1,5 @@
-Vocabulary 0.9 — iPhone PWA
+Vocabulary v1.0 — Timed Cards visual redesign.
 
-Загрузите файлы из этой папки в корень существующего репозитория GitHub Pages, заменив старые файлы. Не загружайте ZIP целиком.
+Upload all six files from this directory to the root of your existing GitHub Pages repository. Keep the same URL to preserve local words. Before updating, export your vocabulary as a backup.
 
-Откройте ссылку сайта в Safari на iPhone и выберите Поделиться → На экран Домой.
-
-Перед обновлением экспортируйте словарь в Настройки → Экспорт. Данные остаются в localStorage на прежнем адресе сайта, если не очищать данные Safari.
-
-Изменения: новый значок V. с точкой Tiffany, стеклянный переключатель страниц, полноэкранная сцена карточек и магнитный timed mode, расширенные тематические предложения и замена на месте без мерцаний, подавление двойного zoom.
+Timed mode: choose a category with saved words, choose On time, then hold and drag the card down into the illuminated oval. The glowing funnel is hidden until dragging starts; it follows the downward gesture. The Start button is an accessibility alternative to dragging.
