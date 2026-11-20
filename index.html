@@ -1,0 +1,1510 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#100c0b"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Vocabulary"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><title>Vocabulary</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f3f5fa;
+  --card: #ffffff;
+  --ink: #202431;
+  --muted: #858d9e;
+  --line: #e9edf4;
+  --blue: #4778e8;
+  --bluebg: #edf2ff;
+  --green: #39a982;
+  --purple: #9170d8;
+  --orange: #e6a24b;
+  --pink: #d978a5;
+  --shadow: 0 8px 28px rgba(32, 47, 82, .055);
+  --shadow-lift: 0 18px 42px rgba(32, 47, 82, .12);
+  --glass-bg: rgba(255, 255, 255, .58);
+  --glass-border: rgba(255, 255, 255, .82);
+  --radius-xs: 10px;
+  --radius-control: 15px;
+  --radius-icon: 15px;
+  --radius-card: 22px;
+  --radius-large: 28px;
+  --radius-floating: 22px;
+  --radius-nav-item: 18px;
+  --radius-sheet: 30px;
+  --radius-pill: 999px;
+  --spring: cubic-bezier(.16, 1, .3, 1);
+  --spring-soft: cubic-bezier(.2, .85, .25, 1);
+}
+
+* { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 20px;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 8% 0%, rgba(216, 228, 255, .58), transparent 34%),
+    radial-gradient(ellipse at 96% 28%, rgba(238, 228, 255, .42), transparent 30%),
+    var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; border: 0; -webkit-tap-highlight-color: transparent; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid rgba(71, 120, 232, .24);
+  outline-offset: 2px;
+}
+
+.app {
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: env(safe-area-inset-top) 18px calc(126px + env(safe-area-inset-bottom));
+}
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 2px 18px;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.brand { margin-top: 3px; font-size: 29px; font-weight: 760; letter-spacing: -1.2px; }
+.avatar {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.8);
+  border-radius: var(--radius-icon);
+  background: linear-gradient(145deg, rgba(255,255,255,.9), rgba(225,234,255,.8));
+  color: var(--blue);
+  font-size: 19px;
+  box-shadow: 0 5px 18px rgba(64, 103, 184, .10), inset 0 1px 0 #fff;
+}
+
+.page { display: none; }
+.page.active { display: block; animation: pageIn .48s var(--spring) both; }
+@keyframes pageIn {
+  from { opacity: 0; transform: translate3d(0, 13px, 0) scale(.99); filter: blur(2px); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0); }
+}
+.section-title { margin: 7px 0 15px; font-size: 24px; font-weight: 750; letter-spacing: -.7px; }
+.sub { color: var(--muted); font-size: 13px; line-height: 1.45; }
+.card {
+  margin-bottom: 13px;
+  padding: 18px;
+  border: 1px solid rgba(255,255,255,.88);
+  border-radius: var(--radius-card);
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+.hero {
+  margin-bottom: 15px;
+  padding: 22px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(255,255,255,.24);
+  border-radius: var(--radius-large);
+  background: linear-gradient(135deg, #527be7 0%, #6e91ed 55%, #8aa6f4 100%);
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(71,120,232,.19), inset 0 1px 0 rgba(255,255,255,.24);
+  position: relative;
+}
+.hero > * { position: relative; z-index: 2; }
+.hero-liquid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+  mix-blend-mode: screen;
+}
+.hero-liquid .orb {
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  border-radius: 50%;
+  filter: blur(30px);
+  opacity: .72;
+  will-change: transform, opacity, border-radius;
+  animation: heroMorph 16s ease-in-out infinite alternate;
+}
+.hero-liquid .orb1 {
+  left: -8%; top: -18%;
+  background: radial-gradient(circle at 35% 35%, rgba(255,215,150,.78), rgba(244,153,73,.30) 54%, rgba(244,153,73,0) 72%);
+  animation-duration: 18s;
+}
+.hero-liquid .orb2 {
+  right: -10%; top: 8%;
+  background: radial-gradient(circle at 60% 35%, rgba(255,242,203,.54), rgba(243,188,116,.28) 52%, rgba(243,188,116,0) 72%);
+  animation-duration: 22s;
+  animation-delay: -6s;
+}
+.hero-liquid .orb3 {
+  left: 18%; bottom: -42%;
+  width: 340px;
+  height: 340px;
+  background: radial-gradient(circle at 50% 42%, rgba(188,98,43,.34), rgba(255,178,101,.18) 50%, rgba(255,178,101,0) 72%);
+  animation-duration: 20s;
+  animation-delay: -10s;
+}
+.hero-liquid .orb4 {
+  right: 14%; bottom: -30%;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle at 52% 52%, rgba(255,206,127,.52), rgba(227,123,58,.20) 48%, rgba(227,123,58,0) 74%);
+  animation-duration: 24s;
+  animation-delay: -14s;
+}
+@keyframes heroMorph {
+  0% { transform: translate3d(-6%, -4%, 0) scale(.95); border-radius: 44% 56% 63% 37% / 42% 40% 60% 58%; opacity: .52; }
+  25% { transform: translate3d(12%, 10%, 0) scale(1.18); border-radius: 57% 43% 38% 62% / 51% 63% 37% 49%; opacity: .78; }
+  50% { transform: translate3d(0%, 22%, 0) scale(1.36); border-radius: 39% 61% 58% 42% / 56% 41% 59% 44%; opacity: .92; }
+  75% { transform: translate3d(-12%, 4%, 0) scale(1.1); border-radius: 65% 35% 48% 52% / 42% 57% 43% 58%; opacity: .72; }
+  100% { transform: translate3d(14%, -10%, 0) scale(1.44); border-radius: 43% 57% 55% 45% / 64% 36% 60% 40%; opacity: .84; }
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  right: -105px;
+  top: -145px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.13);
+  filter: blur(2px);
+  pointer-events: none;
+}
+.hero .sub { color: rgba(255,255,255,.82); }
+.hero-num { margin: 9px 0 1px; font-size: 44px; font-weight: 780; letter-spacing: -2px; }
+.hero-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.hero-bubble {
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: var(--radius-control);
+  background: rgba(255,255,255,.17);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
+  font-size: 12px;
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+}
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+.stat {
+  min-width: 0;
+  padding: 15px 13px;
+  border: 1px solid rgba(255,255,255,.9);
+  border-radius: var(--radius-card);
+  background: rgba(255,255,255,.88);
+  box-shadow: var(--shadow);
+}
+.stat-num { font-size: 25px; font-weight: 760; letter-spacing: -.8px; }
+.stat-label { margin-top: 4px; color: var(--muted); font-size: 12px; }
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; font-weight: 700; }
+.link { padding: 5px 3px; background: none; color: var(--blue); font-weight: 680; }
+
+.quick { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; perspective: 900px; }
+.quick button, .mode {
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+  border: 1px solid rgba(255,255,255,.92);
+  border-radius: var(--radius-card);
+  background: rgba(255,255,255,.94);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  transform: translateZ(0);
+  transform-style: preserve-3d;
+  transition: transform .52s var(--spring), box-shadow .45s ease, background .35s ease;
+}
+.quick button { padding: 16px; }
+.quick button::after, .mode::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.72), transparent 48%);
+  transition: opacity .35s ease;
+}
+.quick .ico {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  margin-bottom: 13px;
+  border-radius: var(--radius-icon);
+  font-size: 18px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+}
+.quick strong { display: block; font-size: 14px; }
+.quick small { display: block; margin-top: 4px; color: var(--muted); }
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 12px;
+  padding: 0 14px;
+  border: 1px solid rgba(255,255,255,.92);
+  border-radius: var(--radius-control);
+  background: rgba(255,255,255,.9);
+  box-shadow: 0 5px 18px rgba(32,47,82,.045);
+}
+.search input { width: 100%; min-width: 0; padding: 14px 0; border: 0; outline: 0; background: transparent; }
+.filters {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 1px 1px 13px;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+.filters::-webkit-scrollbar { display: none; }
+.chip {
+  position: relative;
+  flex: 0 0 auto;
+  overflow: hidden;
+  padding: 9px 14px;
+  border: 1px solid rgba(255,255,255,.9);
+  border-radius: var(--radius-pill);
+  background: rgba(255,255,255,.9);
+  color: #6e7483;
+  font-size: 12px;
+  font-weight: 680;
+  white-space: nowrap;
+  scroll-snap-align: start;
+  transition: transform .48s var(--spring), background .35s ease, color .3s ease, box-shadow .35s ease;
+}
+.chip.selected {
+  border-color: rgba(71,120,232,.12);
+  background: linear-gradient(135deg, #e9f0ff, #f4f6ff);
+  color: var(--blue);
+  box-shadow: 0 5px 15px rgba(71,120,232,.12), inset 0 1px 0 #fff;
+  transform: scale(1.045);
+  animation: chipPop .5s var(--spring) both;
+}
+@keyframes chipPop { 0% { transform: scale(.92); } 65% { transform: scale(1.07); } 100% { transform: scale(1.045); } }
+.chip:active { transform: scale(.94); }
+
+.entry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  animation: itemIn .42s var(--spring) both;
+  transition: background .25s ease, transform .35s var(--spring);
+}
+@keyframes itemIn { from { opacity: 0; transform: translate3d(0, 9px, 0) scale(.985); } to { opacity: 1; transform: translate3d(0,0,0) scale(1); } }
+.entry:last-child { border-bottom: 0; }
+.entry:active { transform: scale(.988); background: rgba(239,244,255,.82); }
+.letter {
+  display: grid;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-radius: var(--radius-icon);
+  background: #f0f3fb;
+  color: var(--blue);
+  font-weight: 760;
+}
+.entry-main { flex: 1; min-width: 0; }
+.entry-word { font-size: 16px; font-weight: 720; }
+.entry-translation { margin-top: 3px; color: var(--muted); font-size: 13px; }
+.entry-right { color: #a2a7b2; font-size: 19px; }
+.empty { padding: 35px 12px; color: var(--muted); text-align: center; line-height: 1.55; }
+.empty .big { margin-bottom: 10px; font-size: 34px; }
+
+.primary, .secondary, .outline, .suggestion-add, .answer {
+  border-radius: var(--radius-control);
+  font-weight: 680;
+  transition: transform .42s var(--spring), box-shadow .35s ease, background .25s ease, filter .25s ease;
+}
+.primary { padding: 13px 17px; background: linear-gradient(135deg, #4778e8, #5e8aef); color: #fff; box-shadow: 0 7px 17px rgba(71,120,232,.18), inset 0 1px 0 rgba(255,255,255,.22); }
+.secondary { padding: 11px 14px; border: 1px solid rgba(71,120,232,.08); background: var(--bluebg); color: var(--blue); }
+.outline { padding: 11px 14px; border: 1px solid var(--line); background: rgba(255,255,255,.88); color: var(--ink); }
+.full { width: 100%; }
+
+.fab {
+  position: fixed;
+  z-index: 6;
+  right: max(22px, calc((100vw - 780px)/2 + 22px));
+  bottom: calc(96px + env(safe-area-inset-bottom));
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.5);
+  border-radius: var(--radius-floating);
+  background: linear-gradient(145deg, rgba(92,143,250,.92), rgba(62,105,222,.88));
+  color: white;
+  font-size: 29px;
+  box-shadow: 0 12px 28px rgba(56,99,210,.3), inset 0 1px 0 rgba(255,255,255,.36);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  transition: transform .52s var(--spring), box-shadow .4s ease, filter .3s ease;
+}
+.fab:active { transform: scale(.9) rotate(-7deg); box-shadow: 0 5px 14px rgba(56,99,210,.24); }
+
+.nav {
+  position: fixed;
+  z-index: 5;
+  left: 50%;
+  bottom: calc(11px + env(safe-area-inset-bottom));
+  display: flex;
+  width: min(620px, calc(100% - 24px));
+  justify-content: center;
+  padding: 8px 9px;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-large);
+  background: var(--glass-bg);
+  box-shadow: 0 12px 36px rgba(37,52,88,.13), inset 0 1px 0 rgba(255,255,255,.92), inset 0 -1px 0 rgba(255,255,255,.3);
+  transform: translateX(-50%);
+  backdrop-filter: blur(32px) saturate(185%);
+  -webkit-backdrop-filter: blur(32px) saturate(185%);
+}
+.nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,.58), transparent 45%, rgba(255,255,255,.12));
+}
+.nav-inner { position: relative; display: grid; width: 100%; grid-template-columns: repeat(5, 1fr); }
+.nav button {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 3px;
+  border-radius: var(--radius-nav-item);
+  background: transparent;
+  color: #858c9d;
+  font-size: 10px;
+  font-weight: 680;
+  transition: color .3s ease, transform .45s var(--spring), background .3s ease;
+}
+.nav button .ni { font-size: 21px; line-height: 22px; transition: transform .48s var(--spring); }
+.nav button.active { background: rgba(255,255,255,.46); color: var(--blue); box-shadow: inset 0 1px 0 rgba(255,255,255,.75), 0 3px 10px rgba(54,78,130,.06); }
+.nav button.active .ni { transform: translateY(-1px) scale(1.12); }
+.nav button:active { transform: scale(.94); }
+
+.modal {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 14px;
+  perspective: 1200px;
+  background: rgba(20,27,43,0);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .34s ease, background .34s ease, visibility .34s;
+}
+.modal.show {
+  background: rgba(24,31,49,.32);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  backdrop-filter: blur(9px) saturate(135%);
+  -webkit-backdrop-filter: blur(9px) saturate(135%);
+}
+.sheet {
+  position: relative;
+  width: min(620px, 100%);
+  max-height: min(92vh, 900px);
+  padding: 21px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid rgba(255,255,255,.88);
+  border-radius: var(--radius-sheet);
+  background: rgba(250,251,255,.84);
+  box-shadow: 0 28px 90px rgba(15,25,48,.24), inset 0 1px 0 rgba(255,255,255,.96);
+  transform: translate3d(0, 58px, 0) scale(.92) rotateX(7deg);
+  transform-origin: 50% 100%;
+  will-change: transform, opacity, filter;
+  filter: blur(2px);
+  opacity: .35;
+  transition: transform .68s var(--spring), opacity .32s ease, filter .42s ease;
+  backdrop-filter: blur(26px) saturate(175%);
+  -webkit-backdrop-filter: blur(26px) saturate(175%);
+  -webkit-overflow-scrolling: touch;
+}
+.modal.show .sheet { transform: translate3d(0,0,0) scale(1) rotateX(0); filter: blur(0); opacity: 1; }
+.sheet::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 9%;
+  width: 82%;
+  height: 1px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.95);
+  box-shadow: 0 0 16px rgba(255,255,255,.7);
+  pointer-events: none;
+}
+.sheet-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.sheet h2 { margin: 0; font-size: 21px; font-weight: 750; letter-spacing: -.4px; }
+.close {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  flex: 0 0 34px;
+  border: 1px solid rgba(255,255,255,.8);
+  border-radius: var(--radius-pill);
+  background: rgba(232,235,243,.78);
+  color: #737989;
+  font-size: 19px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
+  transition: transform .45s var(--spring), background .25s ease;
+}
+.close:active { transform: scale(.86) rotate(90deg); }
+.field { margin-bottom: 13px; }
+.field label { display: block; margin: 0 0 7px 3px; color: #737989; font-size: 11px; font-weight: 740; letter-spacing: .035em; }
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid rgba(222,227,237,.95);
+  border-radius: var(--radius-control);
+  outline: none;
+  background: rgba(255,255,255,.9);
+  color: var(--ink);
+  box-shadow: inset 0 1px 2px rgba(35,49,80,.025);
+  transition: border-color .25s ease, box-shadow .3s ease, background .25s ease;
+}
+.field textarea { min-height: 72px; resize: vertical; }
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: #9bb3f4;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(71,120,232,.11), 0 4px 14px rgba(71,120,232,.06);
+}
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form-actions { display: flex; gap: 9px; margin-top: 18px; }
+.form-actions > * { flex: 1; }
+.transcription-note { min-height: 14px; margin: -5px 3px 12px; color: var(--muted); font-size: 11px; }
+.loading-dot { display: inline-block; width: 6px; height: 6px; margin-right: 5px; border-radius: var(--radius-pill); background: var(--blue); animation: pulse 1s infinite alternate; }
+@keyframes pulse { to { opacity: .25; transform: scale(.7); } }
+
+.toast {
+  position: fixed;
+  z-index: 30;
+  left: 50%;
+  bottom: calc(96px + env(safe-area-inset-bottom));
+  max-width: calc(100% - 32px);
+  padding: 12px 17px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: var(--radius-pill);
+  background: rgba(34,40,54,.84);
+  color: #fff;
+  font-size: 13px;
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 18px) scale(.96);
+  box-shadow: 0 12px 28px rgba(20,28,46,.18), inset 0 1px 0 rgba(255,255,255,.14);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  transition: transform .48s var(--spring), opacity .25s ease;
+}
+.toast.show { opacity: 1; transform: translate(-50%,0) scale(1); }
+.detail-word { margin: 5px 0; font-size: 32px; font-weight: 770; letter-spacing: -1px; }
+.detail-trans { color: #626b7b; font-size: 18px; }
+.pill { display: inline-block; margin-top: 12px; padding: 7px 11px; border: 1px solid rgba(255,255,255,.9); border-radius: var(--radius-control); background: rgba(240,243,250,.85); color: #65718a; font-size: 12px; }
+.progress { height: 8px; overflow: hidden; border-radius: var(--radius-pill); background: #edf0f6; }
+.progress > span { display: block; height: 100%; border-radius: inherit; background: var(--green); transition: width .8s var(--spring); }
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; perspective: 900px; }
+.mode { min-height: 126px; padding: 17px; }
+.mode .mi { margin-bottom: 10px; font-size: 24px; }
+.mode b { display: block; }
+.mode small { display: block; margin-top: 4px; color: var(--muted); }
+.flash { display: flex; min-height: 245px; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.flash-word { margin: 16px 0; font-size: 32px; font-weight: 770; letter-spacing: -.8px; }
+.flash-hint { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+.answer { display: block; margin: 8px 0; padding: 14px; background: #f4f6fb; color: var(--ink); text-align: left; }
+.answer.correct { background: #e8f7f0; color: #21855e; }
+.answer.wrong { background: #fff0f0; color: #c45b5b; }
+.muted-btn { padding: 8px; background: none; color: var(--muted); }
+.hidden { display: none !important; }
+.setting-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.setting-row:last-child { border-bottom: 0; }
+.suggestions {
+  position: relative;
+  margin: 0 0 13px;
+  padding: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.9);
+  border-radius: var(--radius-card);
+  background: linear-gradient(135deg, rgba(236,243,255,.82), rgba(248,243,255,.72));
+  box-shadow: 0 8px 24px rgba(70,94,145,.07), inset 0 1px 0 rgba(255,255,255,.95);
+  animation: glassRise .58s var(--spring) both;
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+}
+.suggestions::after {
+  content: "";
+  position: absolute;
+  top: -45%;
+  right: -22%;
+  width: 58%;
+  height: 150%;
+  border-radius: 50%;
+  background: rgba(255,255,255,.28);
+  filter: blur(20px);
+  pointer-events: none;
+}
+@keyframes glassRise { from { opacity: 0; transform: translate3d(0,14px,0) scale(.97); filter: blur(5px); } to { opacity: 1; transform: translate3d(0,0,0) scale(1); filter: blur(0); } }
+.suggestion-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid rgba(220,228,242,.8); animation: itemIn .48s var(--spring) both; }
+.suggestion-row:nth-child(4) { animation-delay: .04s; }
+.suggestion-row:nth-child(5) { animation-delay: .08s; }
+.suggestion-row:nth-child(6) { animation-delay: .12s; }
+.suggestion-row:nth-child(7) { animation-delay: .16s; }
+.suggestion-row:first-of-type { border-top: 0; }
+.suggestion-main { flex: 1; min-width: 0; }
+.suggestion-word { font-weight: 740; }
+.suggestion-translation { margin-top: 2px; color: var(--muted); font-size: 12px; }
+.suggestion-add { padding: 8px 11px; border: 1px solid rgba(220,230,255,.95); background: rgba(255,255,255,.78); color: var(--blue); font-size: 12px; white-space: nowrap; box-shadow: inset 0 1px 0 rgba(255,255,255,.9); }
+
+
+/* 3D category picker inspired by the reference carousel */
+.flash-category-picker {
+  margin: 14px 0 18px;
+  animation: pickerReveal .72s var(--spring) both;
+}
+@keyframes pickerReveal {
+  from { opacity: 0; transform: translate3d(0,18px,0) scale(.975); filter: blur(5px); }
+  to { opacity: 1; transform: translate3d(0,0,0) scale(1); filter: blur(0); }
+}
+.picker-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin: 0 2px 13px; }
+.picker-heading h3 { margin:0; font-size:21px; font-weight:760; letter-spacing:-.55px; }
+.picker-heading .sub { max-width:150px; text-align:right; }
+.carousel-stage {
+  position:relative;
+  height:362px;
+  overflow:hidden;
+  isolation:isolate;
+  perspective:1100px;
+  perspective-origin:50% 46%;
+  border:1px solid rgba(255,255,255,.24);
+  border-radius:var(--radius-sheet);
+  background:
+    radial-gradient(ellipse at 50% 8%, rgba(109,139,211,.28), transparent 46%),
+    radial-gradient(ellipse at 50% 105%, rgba(88,105,151,.26), transparent 48%),
+    linear-gradient(155deg,#26334a 0%,#172235 55%,#111a2a 100%);
+  box-shadow:0 20px 46px rgba(24,36,62,.19), inset 0 1px 0 rgba(255,255,255,.22);
+  touch-action:pan-y;
+  -webkit-user-select:none;
+  user-select:none;
+}
+.carousel-stage::before, .carousel-stage::after {
+  content:""; position:absolute; pointer-events:none; border-radius:50%; filter:blur(2px); z-index:0;
+}
+.carousel-stage::before { width:260px;height:260px;left:50%;top:45%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,255,255,.12),transparent 68%); }
+.carousel-stage::after { width:78%;height:38px;left:11%;bottom:21px;background:rgba(0,0,0,.34);filter:blur(19px); }
+.category-card {
+  --tone-a:#e8efff; --tone-b:#9bb5f5; --tone-c:#4c70ca;
+  position:absolute;
+  left:50%; top:25px;
+  display:flex;
+  width:min(232px,65vw);
+  height:300px;
+  flex-direction:column;
+  align-items:stretch;
+  padding:17px 17px 14px;
+  overflow:hidden;
+  text-align:left;
+  color:#1f2940;
+  border:1px solid rgba(255,255,255,.78);
+  border-radius:29px;
+  background:
+    radial-gradient(circle at 82% 10%,rgba(255,255,255,.66),transparent 33%),
+    linear-gradient(145deg,var(--tone-a) 0%,var(--tone-b) 54%,var(--tone-c) 100%);
+  box-shadow:0 24px 42px rgba(4,12,28,.34),inset 0 1px 0 rgba(255,255,255,.92),inset 0 -14px 26px rgba(35,48,83,.08);
+  transform-style:preserve-3d;
+  transform-origin:50% 58%;
+  --drag-x:0px; --drag-y:0px; --drag-z:0px; --drag-scale:1;
+  transform:translate3d(calc(-50% + var(--x,0px) + var(--drag-x,0px)),var(--drag-y,0px),calc(var(--z,0px) + var(--drag-z,0px))) rotateY(var(--ry,0deg)) scale(var(--scale,1)) scale(var(--drag-scale,1));
+  opacity:0;
+  filter:blur(5px) saturate(.82);
+  pointer-events:none;
+  z-index:1;
+  will-change:transform,opacity,filter;
+  transition:transform .78s cubic-bezier(.16,1,.3,1),opacity .56s ease,filter .58s ease,box-shadow .58s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.category-card::before {
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(135deg,rgba(255,255,255,.52),transparent 34%,transparent 66%,rgba(255,255,255,.16));
+}
+.category-card::after {
+  content:"";position:absolute;width:170px;height:170px;right:-80px;top:55px;border:1px solid rgba(255,255,255,.32);border-radius:50%;
+  box-shadow:0 0 0 17px rgba(255,255,255,.07),0 0 0 36px rgba(255,255,255,.045);pointer-events:none;
+}
+.category-card.is-center { --x:0px;--z:54px;--ry:0deg;--scale:1;opacity:1;filter:none;pointer-events:auto;z-index:5;box-shadow:0 27px 52px rgba(4,12,28,.4),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -14px 26px rgba(35,48,83,.08); }
+.category-card.is-prev { --x:-151px;--z:-72px;--ry:27deg;--scale:.84;opacity:.9;filter:saturate(.86) brightness(.91);pointer-events:auto;z-index:4; }
+.category-card.is-next { --x:151px;--z:-72px;--ry:-27deg;--scale:.84;opacity:.9;filter:saturate(.86) brightness(.91);pointer-events:auto;z-index:4; }
+.category-card.is-far-prev { --x:-252px;--z:-190px;--ry:37deg;--scale:.68;opacity:.34;filter:blur(1.5px) saturate(.72);z-index:2; }
+.category-card.is-far-next { --x:252px;--z:-190px;--ry:-37deg;--scale:.68;opacity:.34;filter:blur(1.5px) saturate(.72);z-index:2; }
+.category-card.is-hidden { --x:0px;--z:-260px;--scale:.5;opacity:0;z-index:0; }
+.category-card:active.is-center { transform:translate3d(-50%,2px,42px) scale(.985); }
+.category-card-top { position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;color:rgba(29,43,68,.58);font-size:9px;font-weight:800;letter-spacing:.13em; }
+.category-card-top span:last-child { letter-spacing:.06em; }
+.category-art { position:relative;z-index:1;display:grid;place-items:center;width:88px;height:88px;margin:17px auto 12px;border:1px solid rgba(255,255,255,.58);border-radius:27px;background:linear-gradient(145deg,rgba(255,255,255,.55),rgba(255,255,255,.16));box-shadow:0 12px 24px rgba(39,54,88,.12),inset 0 1px 0 rgba(255,255,255,.88);transform:translateZ(24px) rotate(-5deg); }
+.category-art::before { content:"";position:absolute;inset:8px;border:1px solid rgba(255,255,255,.42);border-radius:21px; }
+.category-art-icon { position:relative;z-index:1;font-size:39px;filter:drop-shadow(0 5px 5px rgba(39,54,88,.14));transform:translateZ(16px); }
+.category-card-copy { position:relative;z-index:1; }
+.category-kicker { color:rgba(29,43,68,.57);font-size:9px;font-weight:800;letter-spacing:.13em; }
+.category-name { min-height:54px;margin-top:5px;font-size:23px;line-height:1.08;font-weight:790;letter-spacing:-.75px; }
+.category-count { display:flex;align-items:baseline;gap:6px;margin-top:5px;color:rgba(29,43,68,.72);font-size:11px; }
+.category-count strong { color:#1d2b44;font-size:20px;font-weight:790;letter-spacing:-.6px; }
+.category-preview { position:relative;z-index:1;display:flex;gap:6px;margin-top:auto;min-width:0; }
+.category-preview span { min-width:0;overflow:hidden;padding:6px 8px;border:1px solid rgba(255,255,255,.48);border-radius:var(--radius-pill);background:rgba(255,255,255,.34);color:rgba(29,43,68,.78);font-size:9px;font-weight:720;text-overflow:ellipsis;white-space:nowrap;backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px); }
+.category-card-footer { position:relative;z-index:1;display:flex;justify-content:space-between;margin-top:12px;padding-top:9px;border-top:1px solid rgba(255,255,255,.34);color:rgba(29,43,68,.5);font-size:8px;font-weight:800;letter-spacing:.1em; }
+.carousel-controls { display:flex;align-items:center;justify-content:center;gap:15px;margin:12px 0 13px; }
+.carousel-arrow { display:grid;width:38px;height:38px;place-items:center;border:1px solid rgba(255,255,255,.9);border-radius:50%;background:rgba(255,255,255,.76);color:#65728c;font-size:19px;box-shadow:0 6px 16px rgba(30,48,84,.08),inset 0 1px 0 #fff;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:transform .45s var(--spring),background .3s ease; }
+.carousel-arrow:active { transform:scale(.88);background:#fff; }
+.carousel-dots { display:flex;align-items:center;justify-content:center;gap:5px;max-width:190px;overflow:hidden; }
+.carousel-dot { width:5px;height:5px;padding:0;border-radius:var(--radius-pill);background:#c8ceda;opacity:.72;transition:width .55s var(--spring),background .35s ease,opacity .35s ease; }
+.carousel-dot.active { width:19px;background:var(--blue);opacity:1; }
+.category-selection { padding:15px 16px 16px;border:1px solid rgba(255,255,255,.88);border-radius:var(--radius-card);background:rgba(255,255,255,.76);box-shadow:var(--shadow);backdrop-filter:blur(22px) saturate(155%);-webkit-backdrop-filter:blur(22px) saturate(155%); }
+.selection-overline { color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.13em; }
+.selection-row { display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0 4px; }
+.selection-name { min-width:0;font-size:17px;font-weight:760;letter-spacing:-.35px; }
+.selection-count { flex:0 0 auto;padding:6px 10px;border:1px solid rgba(71,120,232,.1);border-radius:var(--radius-pill);background:var(--bluebg);color:var(--blue);font-size:11px;font-weight:750; }
+.selection-hint { min-height:18px;margin:0 0 12px;color:var(--muted);font-size:12px;line-height:1.4; }
+.category-start { width:100%; }
+.category-start:disabled { opacity:.46;filter:grayscale(.3);box-shadow:none;cursor:default; }
+
+/* Timed flashcards: focus state + tactile drag-to-slot activation */
+.selection-actions { display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.82fr);gap:9px; }
+.timed-mode-button {
+  display:flex;align-items:center;justify-content:center;gap:7px;min-height:48px;padding:11px 14px;
+  border:1px solid rgba(225,164,82,.34);border-radius:var(--radius-control);
+  background:linear-gradient(145deg,rgba(255,249,237,.98),rgba(255,238,211,.88));
+  color:#9a6329;font-weight:760;box-shadow:0 7px 18px rgba(194,133,59,.10),inset 0 1px 0 #fff;
+  transition:transform .48s var(--spring),box-shadow .42s ease,background .35s ease;
+}
+.timed-mode-button:active { transform:scale(.96); }
+.timed-mode-button:disabled { opacity:.42;filter:grayscale(.4);cursor:default; }
+.category-selection.timed-active {
+  border-color:rgba(229,174,105,.58);
+  background:linear-gradient(145deg,rgba(255,251,243,.88),rgba(255,244,226,.82));
+  box-shadow:0 12px 30px rgba(187,126,53,.12),inset 0 1px 0 #fff;
+}
+.timed-options { margin-top:13px;animation:glassRise .48s var(--spring) both; }
+.timed-options-head { display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px;color:#91602e;font-size:12px;font-weight:760; }
+.duration-choices { display:grid;grid-template-columns:repeat(3,1fr);gap:7px; }
+.duration-choice {
+  min-height:39px;padding:8px 6px;border:1px solid rgba(215,171,112,.38);border-radius:var(--radius-control);
+  background:rgba(255,255,255,.7);color:#8e6a43;font-size:12px;font-weight:740;
+  transition:transform .4s var(--spring),background .3s ease,box-shadow .35s ease,border-color .3s ease;
+}
+.duration-choice.active { border-color:rgba(210,143,57,.78);background:linear-gradient(145deg,#fff5df,#ffe8bd);color:#8e541c;box-shadow:0 4px 13px rgba(194,133,59,.14),inset 0 1px 0 #fff; }
+.duration-choice:active { transform:scale(.94); }
+.timed-instruction { margin:12px 0 8px;padding:10px 12px;border:1px solid rgba(221,171,105,.28);border-radius:var(--radius-control);background:rgba(255,255,255,.48);color:#8b704e;font-size:11px;line-height:1.45;text-align:center; }
+.timed-cancel { display:block;margin:0 auto;padding:7px 12px;background:transparent;color:#a17443;font-size:12px;font-weight:700; }
+
+.carousel-stage.timer-mode {
+  height:448px;overflow:hidden;touch-action:none;
+  border-color:rgba(255,208,143,.46);
+  background:
+    radial-gradient(ellipse at 50% 83%,rgba(240,171,83,.23),transparent 37%),
+    radial-gradient(ellipse at 50% 4%,rgba(255,221,170,.12),transparent 43%),
+    linear-gradient(155deg,#282b35 0%,#1d2029 54%,#171a22 100%);
+  box-shadow:0 22px 48px rgba(42,30,17,.22),inset 0 1px 0 rgba(255,236,206,.16);
+  transition:height .65s var(--spring),background .5s ease,border-color .5s ease,box-shadow .5s ease;
+}
+.carousel-stage.timer-mode::before { width:320px;height:320px;top:52%;background:radial-gradient(circle,rgba(255,190,104,.18),transparent 68%); }
+.carousel-stage.timer-mode::after { bottom:83px;background:rgba(241,167,78,.24);filter:blur(28px); }
+.carousel-stage.timer-mode .category-card:not(.is-center) {
+  --x:0px;--z:-280px;--scale:.48;opacity:0;filter:blur(8px);pointer-events:none;
+  transform:translate3d(-50%,-18px,-280px) scale(.48);transition:transform .62s var(--spring),opacity .38s ease,filter .42s ease;
+}
+.carousel-stage.timer-mode .category-card.is-center {
+  top:19px;width:min(250px,72vw);height:282px;padding:16px 17px 13px;
+  border:1.5px solid rgba(255,211,153,.98);
+  box-shadow:0 0 0 2px rgba(247,180,95,.20),0 0 23px rgba(245,173,83,.48),0 0 56px rgba(238,157,63,.25),0 22px 48px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.96),inset 0 -13px 26px rgba(103,63,25,.12);
+  transition:transform .68s var(--spring),opacity .4s ease,filter .4s ease,box-shadow .48s ease,border-color .45s ease;
+}
+.carousel-stage.timer-mode .category-card.is-center::before { background:linear-gradient(135deg,rgba(255,255,255,.58),transparent 35%,transparent 64%,rgba(255,222,175,.2)); }
+.carousel-stage.timer-mode .category-card.is-center::after { border-color:rgba(255,226,184,.46);box-shadow:0 0 0 17px rgba(255,204,139,.09),0 0 0 36px rgba(255,196,117,.055); }
+.carousel-stage.timer-mode .category-card.is-center .category-card-footer { border-top-color:rgba(159,105,48,.18);color:rgba(112,75,37,.76); }
+.carousel-stage.timer-mode .category-card.is-center .category-card-footer span:first-child { letter-spacing:.08em; }
+.category-card.is-grabbed { z-index:12!important;transition:none!important;cursor:grabbing;filter:none!important; }
+.category-card.is-dragging { --drag-scale:1.035;--drag-z:28px;filter:drop-shadow(0 18px 24px rgba(0,0,0,.22))!important; }
+.category-card.is-armed { border-color:#ffe2a9!important;box-shadow:0 0 0 3px rgba(255,205,128,.36),0 0 32px rgba(255,177,77,.78),0 0 75px rgba(255,173,74,.44),0 26px 54px rgba(0,0,0,.38),inset 0 1px 0 #fff!important; }
+.category-card.is-launching { animation:cardIntoDrive .42s cubic-bezier(.2,.8,.2,1) forwards!important;pointer-events:none; }
+@keyframes cardIntoDrive { 0% { opacity:1;filter:none; } 58% { opacity:1; } 100% { transform:translate3d(-50%,174px,145px) rotateX(12deg) scale(.76);opacity:0;filter:blur(7px); } }
+.activation-drive {
+  display:none;position:absolute;z-index:3;left:50%;bottom:15px;width:min(330px,84%);height:66px;
+  flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  border:1px solid rgba(255,215,165,.19);border-radius:20px;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.015));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 12px 28px rgba(0,0,0,.16);
+  opacity:.86;transform:translateX(-50%) translateY(8px) scale(.97);
+  transition:opacity .4s ease,transform .55s var(--spring),border-color .4s ease,box-shadow .4s ease;
+  pointer-events:none;
+}
+.carousel-stage.timer-mode .activation-drive { display:flex;opacity:1;transform:translateX(-50%) translateY(0) scale(1); }
+.drive-caption { color:rgba(255,224,188,.64);font-size:9px;font-weight:800;letter-spacing:.14em; }
+.drive-slot { position:relative;width:74%;height:8px;overflow:hidden;border:1px solid rgba(255,211,150,.45);border-radius:var(--radius-pill);background:rgba(12,14,19,.72);box-shadow:0 0 0 4px rgba(245,174,91,.06),inset 0 2px 4px rgba(0,0,0,.8); }
+.drive-slot::before { content:"";position:absolute;inset:1px;border-radius:inherit;background:linear-gradient(90deg,transparent,rgba(255,187,95,.16),rgba(255,220,161,.9),rgba(255,174,75,.25),transparent);filter:blur(1px);opacity:.7; }
+.drive-slot::after { content:"";position:absolute;left:50%;top:50%;width:34%;height:20px;border-radius:50%;background:rgba(255,177,79,.48);filter:blur(13px);transform:translate(-50%,-50%);opacity:.55;transition:opacity .3s ease,transform .3s ease; }
+.carousel-stage.drive-ready .activation-drive { border-color:rgba(255,209,144,.56);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 26px rgba(244,170,83,.2),0 12px 28px rgba(0,0,0,.16); }
+.carousel-stage.drive-ready .drive-caption { color:#ffe2b8; }
+.carousel-stage.drive-ready .drive-slot { border-color:#ffe0ac;box-shadow:0 0 0 5px rgba(255,197,120,.12),0 0 22px rgba(255,174,78,.7),inset 0 2px 4px rgba(0,0,0,.8); }
+.carousel-stage.drive-ready .drive-slot::after { opacity:1;transform:translate(-50%,-50%) scale(1.6); }
+.carousel-stage.drive-fired .activation-drive { animation:drivePulse .42s ease both; }
+@keyframes drivePulse { 50% { box-shadow:0 0 42px rgba(255,185,93,.65),inset 0 1px 0 rgba(255,255,255,.3); } }
+.carousel-controls.hidden { display:none; }
+.category-selection.timed-active .selection-actions { display:none; }
+.timer-result { padding:12px 0 22px;text-align:center; }
+.timer-result-icon { display:grid;width:72px;height:72px;place-items:center;margin:0 auto 16px;border:1px solid rgba(232,177,105,.35);border-radius:24px;background:linear-gradient(145deg,#fff7e9,#ffe7c3);color:#a66b2e;font-size:32px;box-shadow:0 12px 28px rgba(197,135,62,.16),inset 0 1px 0 #fff; }
+.timer-result h2 { margin:0 0 6px;font-size:24px;letter-spacing:-.6px; }
+.timer-result-stats { display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:20px 0 8px; }
+.timer-result-stat { padding:14px;border:1px solid rgba(255,255,255,.9);border-radius:var(--radius-card);background:linear-gradient(145deg,#fff,#f7f8fc); }
+.timer-result-stat strong { display:block;font-size:27px;letter-spacing:-.8px; }
+.timer-result-stat span { color:var(--muted);font-size:11px; }
+.timed-practice-head { display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px; }
+.timed-practice-label { color:#a16b32;font-size:10px;font-weight:800;letter-spacing:.1em; }
+.timer-pill { min-width:70px;padding:7px 11px;border:1px solid rgba(224,165,88,.36);border-radius:var(--radius-pill);background:linear-gradient(145deg,#fff8ec,#ffedcf);color:#9c6227;font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;text-align:center;box-shadow:0 4px 12px rgba(187,128,59,.10),inset 0 1px 0 #fff; }
+.timer-pill.urgent { border-color:rgba(205,96,74,.38);background:linear-gradient(145deg,#fff0eb,#ffddd4);color:#b64e3e; }
+.timer-progress { height:7px;overflow:hidden;margin-bottom:15px;border-radius:var(--radius-pill);background:#f3e8d8; }
+.timer-progress>span { display:block;width:100%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#f2c17b,#d88e42);box-shadow:0 0 12px rgba(223,155,73,.3);transition:width .2s linear; }
+@media (max-width:380px) { .carousel-stage.timer-mode { height:430px; } .carousel-stage.timer-mode .category-card.is-center { width:min(236px,74vw);height:270px; } .activation-drive { bottom:12px;height:62px; } }
+
+@media (max-width:380px) {
+  .carousel-stage { height:340px; }
+  .category-card { top:22px;width:min(220px,66vw);height:286px;padding:15px; }
+  .category-card.is-prev { --x:-139px; }
+  .category-card.is-next { --x:139px; }
+  .category-card.is-far-prev { --x:-232px; }
+  .category-card.is-far-next { --x:232px; }
+  .category-art { width:78px;height:78px;margin:14px auto 10px; }
+  .category-name { font-size:21px;min-height:48px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .category-card,.carousel-dot,.carousel-arrow,.flash-category-picker,.hero-liquid .orb { transition:none!important;animation:none!important; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .quick button:hover, .mode:hover { transform: translateY(-4px) rotateX(1.5deg) scale(1.012); box-shadow: var(--shadow-lift); }
+  .quick button:hover::after, .mode:hover::after { opacity: 1; }
+  .chip:hover { transform: translateY(-1px); }
+  .entry:hover { background: rgba(239,244,255,.72); }
+  .primary:hover { box-shadow: 0 11px 24px rgba(71,120,232,.25); filter: saturate(1.08); }
+}
+.quick button:active, .mode:active { transform: translateY(1px) scale(.965) rotateX(2deg); box-shadow: 0 3px 10px rgba(32,47,82,.08); }
+.primary:active, .secondary:active, .outline:active, .suggestion-add:active, .answer:active { transform: scale(.965); filter: brightness(.98); }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav { background: rgba(255,255,255,.94); }
+  .sheet { background: rgba(250,251,255,.98); }
+  .suggestions { background: #f0f4ff; }
+}
+@media (min-width: 650px) {
+  .app { padding-top: 28px; }
+  .modal { align-items: center; }
+  .sheet { transform-origin: 50% 55%; }
+  .modal.show .sheet { transform: translate3d(0,0,0) scale(1) rotateX(0); }
+  .fab { bottom: 104px; }
+  .nav { bottom: 15px; }
+}
+@media (max-width: 380px) {
+  .app { padding-right: 14px; padding-left: 14px; }
+  .stats { gap: 7px; }
+  .stat { padding: 13px 10px; }
+  .stat-num { font-size: 22px; }
+  .row2 { gap: 8px; }
+  .sheet { padding: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+
+/* Vocabulary 0.6: dark liquid-glass design system */
+:root {
+  color-scheme: dark;
+  --bg:#100c0b;--card:rgba(39,29,24,.73);--ink:#fff3df;--muted:#b4a49b;
+  --line:rgba(255,212,160,.12);--blue:#f6c16e;--bluebg:rgba(255,187,91,.12);
+  --green:#80e5aa;--purple:#e2b8ff;--orange:#f3b963;--pink:#edb4c9;
+  --shadow:0 12px 34px rgba(0,0,0,.22);--shadow-lift:0 18px 56px rgba(0,0,0,.35);
+  --glass-bg:rgba(57,43,33,.67);--glass-border:rgba(255,229,186,.18);
+  --radius-xs:12px;--radius-control:17px;--radius-icon:17px;
+  --radius-card:25px;--radius-large:32px;--radius-floating:22px;
+  --radius-nav-item:21px;--radius-sheet:32px;--radius-pill:999px;
+}
+html { background:#100c0b; }
+body {
+  background:radial-gradient(ellipse 70% 32% at 53% 2%,rgba(155,83,34,.33),transparent 77%),
+    radial-gradient(ellipse 52% 31% at 96% 60%,rgba(95,46,24,.22),transparent 84%),
+    radial-gradient(ellipse 60% 35% at 4% 86%,rgba(113,66,35,.15),transparent 80%),#100c0b;
+  background-attachment:fixed;color:var(--ink);
+}
+body::before {content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:radial-gradient(ellipse 50% 30% at 50% 25%,rgba(255,184,92,.035),transparent 90%);}
+.eyebrow {color:#be9c79;letter-spacing:.14em}
+.brand {font-weight:750;letter-spacing:-1.35px}
+.avatar {border:1px solid rgba(255,213,156,.23);border-radius:var(--radius-icon);
+  background:linear-gradient(140deg,rgba(126,78,44,.52),rgba(40,28,21,.85));color:#ffce82;
+  box-shadow:0 8px 20px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,230,196,.26);}
+.section-title {font-size:27px;letter-spacing:-.85px}
+.sub {color:var(--muted)}
+.card,.stat,.quick button,.mode,.suggestions,.category-selection {
+  border-color:rgba(255,210,149,.15);
+  background:linear-gradient(147deg,rgba(71,51,38,.65),rgba(31,24,21,.77));
+  color:var(--ink);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,230,192,.09);
+  backdrop-filter:blur(22px) saturate(120%);-webkit-backdrop-filter:blur(22px) saturate(120%);
+}
+.hero {border-color:rgba(255,198,126,.30);
+  background:linear-gradient(135deg,#5c3928 0%,#3b241d 46%,#211716 100%);
+  box-shadow:0 18px 45px rgba(83,41,19,.25),inset 0 1px 0 rgba(255,231,183,.21);
+}
+.hero::after {background:rgba(255,202,134,.10);filter:blur(15px)}
+.hero .sub {color:rgba(255,233,203,.77)}
+.hero-bubble {border-color:rgba(255,212,164,.22);background:rgba(255,215,173,.10)}
+.stats .stat-num {color:#ffe4b1}
+.quick button::after,.mode::after {background:linear-gradient(135deg,rgba(255,218,166,.21),transparent 48%)}
+.quick .ico {background:rgba(248,187,93,.15)!important;color:#ffd08e!important;border:1px solid rgba(255,207,149,.19)}
+.quick small,.mode small {color:var(--muted)}
+.search {border-color:var(--glass-border);background:rgba(53,39,32,.70);box-shadow:var(--shadow)}
+.search input {color:var(--ink)}
+.search input::placeholder,.field input::placeholder,.field textarea::placeholder {color:#907d75}
+.chip {border-color:var(--glass-border);background:rgba(63,45,34,.77);color:#cbb7a3}
+.chip.selected {border-color:rgba(255,200,124,.35);
+  background:linear-gradient(140deg,rgba(164,104,50,.52),rgba(85,55,32,.78));
+  color:#ffe1a9;box-shadow:0 5px 22px rgba(223,140,45,.10),inset 0 1px 0 rgba(255,228,172,.2)}
+.entry:active,.entry:hover {background:rgba(255,206,137,.08)}
+.letter {background:rgba(255,203,127,.12);color:#f8ca86}
+.entry-right {color:#927a6b}
+.primary {background:linear-gradient(145deg,#eab765,#a36c37);color:#241812;
+  box-shadow:0 8px 23px rgba(243,158,64,.18),inset 0 1px 0 rgba(255,244,207,.55)}
+.secondary,.outline,.answer,.suggestion-add {border:1px solid rgba(255,202,140,.17);background:rgba(255,208,138,.10);color:#ffdcab}
+.outline {background:rgba(255,255,255,.045);color:var(--ink)}
+.fab {background:linear-gradient(145deg,rgba(252,199,122,.93),rgba(182,119,56,.88));color:#33201a;
+  border-color:rgba(255,233,186,.55);box-shadow:0 11px 34px rgba(211,133,45,.3),inset 0 1px 0 rgba(255,245,220,.62)}
+.nav {background:rgba(50,35,28,.66);border-color:rgba(255,217,161,.20);
+  box-shadow:0 16px 36px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,230,181,.16)}
+.nav::before {background:linear-gradient(135deg,rgba(255,231,193,.15),transparent 46%,rgba(255,195,121,.035))}
+.nav button {color:#c0a897}
+.nav button.active {color:#ffe0a1;background:rgba(238,163,79,.16);
+  box-shadow:inset 0 1px 0 rgba(255,231,179,.15),0 4px 14px rgba(0,0,0,.14)}
+.modal.show {background:rgba(7,5,6,.66)}
+.sheet {background:linear-gradient(150deg,rgba(70,48,36,.94),rgba(28,23,22,.95));border-color:rgba(255,215,162,.24);
+  box-shadow:0 35px 110px rgba(0,0,0,.60),inset 0 1px 0 rgba(255,223,174,.17)}
+.sheet::before {background:rgba(255,215,165,.52);box-shadow:0 0 24px rgba(245,164,72,.26)}
+.close {background:rgba(255,211,164,.12);border-color:rgba(255,216,177,.19);color:#ffdaad}
+.field label {color:#c3a68c}
+.field input,.field select,.field textarea {background:rgba(19,15,15,.57);color:var(--ink);
+  border-color:rgba(255,203,139,.17);box-shadow:inset 0 1px 3px rgba(0,0,0,.12)}
+.field input:focus,.field select:focus,.field textarea:focus {background:rgba(26,20,19,.87);
+  border-color:#ffca80;box-shadow:0 0 0 4px rgba(255,181,76,.11)}
+.field select option {background:#29201d;color:var(--ink)}
+.detail-trans {color:#d2b69a}
+.pill {background:rgba(255,196,123,.11);color:#ffe0af;border-color:var(--glass-border)}
+.progress {background:rgba(255,221,170,.12)}
+.progress>span {background:linear-gradient(90deg,#d78941,#ffde95)}
+.answer.correct {background:rgba(65,185,122,.23);color:#a7f0c2}
+.answer.wrong {background:rgba(220,86,76,.22);color:#ffb5a8}
+.suggestions {background:linear-gradient(145deg,rgba(100,66,41,.65),rgba(45,34,28,.82))}
+.suggestions::after {background:rgba(255,195,111,.06)}
+.suggestion-row {border-color:var(--line)}
+.suggestion-add {background:rgba(255,198,117,.13);color:#ffcf8b}
+.carousel-stage {border-color:rgba(255,202,127,.21);
+  background:radial-gradient(ellipse 54% 44% at 50% 30%,rgba(194,106,43,.24),transparent 83%),
+    linear-gradient(160deg,#2c1a16,#150e0e 78%);box-shadow:0 22px 57px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,226,178,.11);}
+.category-card {
+  color:#ffe8c2;border-color:rgba(255,206,134,.58);
+  background:radial-gradient(ellipse at 72% 16%,rgba(255,203,119,.31),transparent 53%),
+    linear-gradient(145deg,rgba(120,79,40,.95),rgba(62,39,29,.97) 54%,rgba(38,27,24,.96));
+  box-shadow:0 22px 55px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,229,176,.45),inset 0 -15px 36px rgba(10,5,4,.22);
+  border-radius:32px;
+}
+.category-card::before {background:linear-gradient(135deg,rgba(255,236,186,.29),transparent 32%,transparent 69%,rgba(255,192,108,.10))}
+.category-card::after {border-color:rgba(255,225,165,.13);box-shadow:0 0 0 17px rgba(255,205,134,.035),0 0 0 36px rgba(255,205,134,.02)}
+.category-card.is-center {box-shadow:0 20px 52px rgba(0,0,0,.48),0 0 31px rgba(255,158,65,.12),inset 0 1px 0 rgba(255,229,176,.54)}
+.category-card.is-prev,.category-card.is-next {filter:brightness(.72) saturate(.80)}
+.category-art {background:linear-gradient(145deg,rgba(255,215,153,.2),rgba(255,255,255,.025));border-color:rgba(255,219,166,.25);box-shadow:inset 0 1px 0 rgba(255,222,161,.31)}
+.category-art::before {border-color:rgba(255,217,159,.10)}
+.category-card-top,.category-kicker,.category-count,.category-count strong,.category-card-footer {color:#d5b894}
+.category-count strong {color:#ffe0ab}
+.category-preview span {background:rgba(255,215,161,.11)!important;border-color:rgba(255,219,166,.19)!important;color:#f3d1a4!important}
+.carousel-arrow {background:rgba(72,48,34,.80);color:#ffdbaf;border-color:var(--glass-border)}
+.carousel-dot {background:rgba(255,199,133,.29)}
+.carousel-dot.active {background:#ffd28b}
+.category-selection {background:linear-gradient(140deg,rgba(72,49,33,.80),rgba(36,27,24,.85));}
+.selection-count {background:rgba(255,187,91,.14);border-color:rgba(255,192,121,.25);color:#ffdaa8}
+.timed-mode-button {color:#ffdfad;border-color:rgba(255,194,106,.29);background:linear-gradient(145deg,rgba(158,101,44,.44),rgba(89,56,31,.67));
+  box-shadow:0 8px 18px rgba(0,0,0,.13),inset 0 1px 0 rgba(255,228,175,.18)}
+.category-selection.timed-active {background:linear-gradient(145deg,rgba(97,59,34,.76),rgba(42,29,24,.86));
+  border-color:rgba(255,193,116,.30);box-shadow:0 12px 33px rgba(0,0,0,.21)}
+.timed-options-head,.timed-cancel {color:#f4cd95}
+.duration-choice {background:rgba(255,197,116,.07);border-color:rgba(255,199,128,.20);color:#dec19b}
+.duration-choice.active {background:linear-gradient(145deg,rgba(219,151,64,.49),rgba(139,82,32,.50));
+  border-color:#f3bd77;color:#ffe1a7;box-shadow:0 0 17px rgba(255,181,84,.14),inset 0 1px 0 rgba(255,226,158,.25)}
+.timed-instruction {background:rgba(255,206,133,.06);border-color:var(--glass-border);color:#d7b894}
+.timer-result-stat {background:rgba(255,199,126,.08);border-color:var(--glass-border)}
+.timer-result-icon {background:rgba(250,193,116,.15);color:#ffe0ab}
+.timed-practice-label {color:#f8c481}
+.timer-pill {border-color:rgba(255,206,134,.28);background:rgba(255,196,106,.13);color:#ffe2a8}
+.timer-pill.urgent {background:rgba(227,80,56,.18);color:#ffaaa0}
+.timer-progress {background:rgba(244,193,119,.10)}
+.timer-progress>span {background:linear-gradient(90deg,#ad773d,#ffcc80)}
+@media (hover:hover) and (pointer:fine) {
+  .entry:hover {background:rgba(255,204,137,.07)}
+  .primary:hover {box-shadow:0 11px 26px rgba(230,150,65,.25)}
+}
+/* Full focus screen for a flashcard session */
+#practice.flash-focus > .section-title,
+#practice.flash-focus > .practice-intro,
+#practice.flash-focus > .mode-grid,
+#practice.flash-focus > .practice-knowledge {display:none}
+#practice.flash-focus .flash-category-picker {margin-top:5px}
+#practice.flash-focus .picker-heading h3 {font-size:27px}
+#practice.flash-focus .carousel-stage {height:430px}
+#practice.flash-focus .carousel-stage.timer-mode {height:496px}
+#practice.flash-focus .category-card {top:37px}
+#practice.flash-focus .carousel-stage.timer-mode .category-card.is-center {top:36px;width:min(268px,76vw);height:308px}
+.picker-topline {display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.picker-back,.glass-circle {display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border:1px solid rgba(255,221,174,.23);
+  border-radius:50%;background:rgba(255,219,160,.07);color:#ffe1b4;font-size:22px;box-shadow:inset 0 1px 0 rgba(255,230,180,.15);}
+.picker-topline .picker-heading {flex:1;margin:0}
+.picker-subtitle {font-size:12px;color:#ad9582;margin-top:3px}
+#practiceArea.flash-session {margin:5px 0 28px!important;padding:0!important;border:0!important;
+  border-radius:0!important;background:transparent!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+#practice.flash-focus .nav {opacity:.5}
+/* Warm ambient volume. Brightness is continuous --charge in [0,1]. */
+.carousel-stage.timer-mode {
+  --charge:0;isolation:isolate;overflow:hidden;
+  background:radial-gradient(ellipse 54% 50% at 50% 73%,rgba(196,104,39,.16),transparent 91%),
+   linear-gradient(155deg,#2c1c16,#130d0c 74%);
+  border-color:rgba(255,195,118,.29);
+}
+.carousel-stage.timer-mode::before {background:radial-gradient(circle,rgba(244,168,71,calc(.10 + var(--charge) * .25)),transparent 68%)}
+.carousel-stage.timer-mode .category-card.is-center {
+  background:radial-gradient(ellipse at 50% 12%,rgba(255,205,122,.28),transparent 76%),
+   linear-gradient(160deg,rgba(121,78,44,.91),rgba(54,34,24,.97));
+  box-shadow:0 0 0 1px rgba(255,203,123,.52),
+    0 0 calc(15px + var(--charge) * 28px) rgba(252,170,75,calc(.17 + var(--charge) * .28)),
+    0 0 calc(40px + var(--charge) * 50px) rgba(240,129,39,calc(.09 + var(--charge) * .21)),
+    0 24px 60px rgba(0,0,0,.43),inset 0 1px 0 rgba(255,231,180,.58);
+  border-color:rgba(255,214,147,calc(.6 + var(--charge) * .4));
+  transition:transform .62s var(--spring),opacity .44s ease,filter .45s ease,box-shadow .14s linear,border-color .16s linear;
+}
+.carousel-stage.timer-mode .category-card.is-grabbed {transition:box-shadow .13s linear,border-color .13s linear!important;}
+.category-card.is-dragging {filter:none!important;}
+.carousel-stage.timer-mode .category-card.is-armed {border-color:#ffe3a6!important;}
+.carousel-stage.timer-mode .activation-drive {bottom:19px;height:91px;border-radius:32px;
+  background:linear-gradient(175deg,rgba(255,193,110,.095),rgba(15,9,9,.18));
+  border-color:rgba(255,202,130,calc(.11 + var(--charge) * .32));
+  box-shadow:inset 0 1px 0 rgba(255,228,172,.09),
+    0 0 calc(7px + var(--charge) * 57px) rgba(255,157,48,calc(.02 + var(--charge) * .26));
+}
+.drive-caption {color:rgba(254,214,164,calc(.55 + var(--charge) * .45));letter-spacing:.12em}
+.drive-slot {height:23px;width:79%;border:1.5px solid rgba(255,217,143,calc(.38 + var(--charge) * .6));
+  background:radial-gradient(ellipse at 50% 10%,rgba(255,173,53,calc(.18 + var(--charge) * .53)),transparent 80%),#140d09;
+  box-shadow:0 0 0 calc(3px + var(--charge) * 3px) rgba(255,180,75,calc(.04 + var(--charge) * .10)),
+    0 0 calc(11px + var(--charge) * 45px) rgba(255,161,54,calc(.12 + var(--charge) * .67)),
+    inset 0 3px 7px rgba(0,0,0,.87);overflow:visible;
+  transform:scaleX(calc(1 + var(--charge) * .05));
+  transition:transform .13s linear,border-color .13s linear,box-shadow .13s linear;
+}
+.drive-slot::before {inset:3px 8px;opacity:calc(.25 + var(--charge) * .75);background:linear-gradient(90deg,transparent,#f8bb65 47%,#fff1bb 52%,transparent)}
+.drive-slot::after {width:80%;height:44px;top:100%;background:rgba(246,153,53,.54);
+  opacity:calc(.14 + var(--charge) * .86);transform:translate(-50%,-55%) scale(calc(1 + var(--charge) * .5));filter:blur(22px)}
+.carousel-stage.drive-ready .activation-drive,.carousel-stage.drive-ready .drive-slot {box-shadow:inherit;}
+.carousel-stage.timer-mode .category-card.is-launching {animation:cardInsertV06 .49s cubic-bezier(.17,.79,.12,1) forwards!important}
+@keyframes cardInsertV06 {0% {opacity:1;filter:blur(0)} 52%{opacity:1} 100%{transform:translate3d(-50%,225px,135px) scale(.52) rotateX(58deg);opacity:0;filter:blur(8px)}}
+/* iOS-feeling swipe deck */
+.swipe-session-head {display:flex;align-items:center;justify-content:space-between;gap:12px;margin:3px 1px 14px}
+.swipe-session-title {text-align:center;flex:1;min-width:0;font-size:15px;font-weight:730}
+.swipe-session-sub {display:block;color:#bda58d;font-size:11px;font-weight:500;margin-top:2px}
+.swipe-progress {height:7px;margin:18px 21px 24px;overflow:hidden;border-radius:999px;background:rgba(255,217,157,.13)}
+.swipe-progress > span {display:block;height:100%;border-radius:inherit;
+  background:linear-gradient(90deg,#e3a64f,#ffde9e);box-shadow:0 0 20px rgba(255,174,71,.5);transition:width .56s var(--spring)}
+.swipe-timer-wrap {display:flex;justify-content:center;align-items:center;gap:12px;margin:0 auto 10px}
+.swipe-timer-wrap .timer-progress {width:55%;height:5px;margin:0}
+.swipe-deck {position:relative;isolation:isolate;display:flex;align-items:center;justify-content:center;
+  min-height:425px;margin:0 auto;perspective:1050px;touch-action:pan-y;user-select:none;-webkit-user-select:none;}
+.swipe-ambient {position:absolute;inset:5% -12%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(ellipse at 52% 45%,rgba(173,81,31,.28),transparent 64%);filter:blur(20px)}
+.swipe-deck-back {position:absolute;left:50%;top:50%;width:min(292px,76vw);height:336px;border:1px solid rgba(255,200,121,.14);
+  border-radius:33px;background:linear-gradient(155deg,rgba(104,67,38,.56),rgba(31,22,20,.81));
+  box-shadow:0 19px 30px rgba(0,0,0,.17);transform:translate(-45%,-47%) rotate(7deg) scale(.95);z-index:1}
+.swipe-deck-back.back-two {transform:translate(-43%,-45%) rotate(11deg) scale(.90);opacity:.42;z-index:0}
+.swipe-card {position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:min(292px,76vw);height:336px;z-index:4;padding:23px 17px;overflow:hidden;cursor:grab;outline:none;
+  border:1px solid rgba(255,205,130,.59);border-radius:33px;
+  background:radial-gradient(ellipse at 65% 14%,rgba(246,177,88,.29),transparent 61%),
+    linear-gradient(150deg,rgba(119,73,42,.94),rgba(63,37,28,.98) 72%);
+  box-shadow:0 0 0 1px rgba(250,196,103,.11),0 0 39px rgba(255,146,54,.15),
+    0 30px 65px rgba(0,0,0,.39),inset 0 1px 0 rgba(255,225,172,.52);
+  transform:translate3d(var(--swipe-x,0px),var(--swipe-y,0px),0) rotate(calc(var(--swipe-rot,0deg)));
+  transition:transform .54s var(--spring),opacity .45s ease,box-shadow .32s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.swipe-card::before {content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(145deg,rgba(255,229,171,.20),transparent 37%,transparent 60%,rgba(255,180,91,.07))}
+.swipe-card.is-dragging {cursor:grabbing;transition:none}
+.swipe-card.is-known {transform:translate3d(145%,10px,0) rotate(24deg) scale(.91);opacity:0;
+  box-shadow:0 0 48px rgba(77,231,150,.28)}
+.swipe-card.is-revealed {transform:translate3d(-8px,0,0) rotate(-2deg);border-color:rgba(252,178,121,.71);
+  box-shadow:0 0 44px rgba(238,91,75,.14),0 30px 70px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,225,172,.4)}
+.swipe-card-speaker {position:absolute;top:29px;left:50%;transform:translateX(-50%);font-size:22px;color:#ffdea4;
+  width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,206,137,.20);display:grid;place-items:center;
+  background:rgba(253,185,101,.12);pointer-events:none}
+.swipe-word {position:relative;z-index:2;font-size:clamp(30px,8.6vw,44px);font-weight:750;letter-spacing:-1.4px;
+  color:#fff1d9;max-width:100%;overflow-wrap:anywhere;text-align:center;line-height:1.12}
+.swipe-ipa {margin-top:16px;color:#d8b893;font-size:15px}
+.swipe-answer {position:absolute;left:16px;right:16px;bottom:17px;display:flex;flex-direction:column;justify-content:center;
+  padding:15px 12px;min-height:112px;border:1px solid rgba(255,208,173,.20);border-radius:24px;
+  background:linear-gradient(130deg,rgba(250,191,151,.15),rgba(103,53,42,.45));text-align:center;
+  box-shadow:inset 0 1px 0 rgba(255,228,193,.18);opacity:0;transform:translateY(19px) scale(.97);
+  transition:opacity .38s ease,transform .52s var(--spring);pointer-events:none}
+.swipe-card.is-revealed .swipe-answer {opacity:1;transform:translateY(0) scale(1)}
+.swipe-card.is-revealed .swipe-word {transform:translateY(-70px) scale(.90);transition:transform .48s var(--spring)}
+.swipe-answer .translation {font-size:clamp(20px,6vw,27px);font-weight:720;color:#fff0dc;overflow-wrap:anywhere}
+.swipe-answer .transcription {margin-top:6px;color:#ebbea6;font-size:14px}
+.swipe-edge {position:absolute;top:43%;z-index:3;transform:translateY(-50%);display:flex;align-items:center;
+  width:82px;height:134px;border-radius:35px;opacity:.75;pointer-events:none;
+  transition:opacity .25s ease,transform .35s ease}
+.swipe-edge.left {left:-4px;justify-content:flex-start;padding-left:10px;
+  background:radial-gradient(ellipse at left,rgba(234,76,65,.35),transparent 78%)}
+.swipe-edge.right {right:-4px;justify-content:flex-end;padding-right:10px;
+  background:radial-gradient(ellipse at right,rgba(71,213,127,.35),transparent 78%)}
+.swipe-edge .edge-symbol {display:flex;align-items:center;flex-direction:column;gap:6px;font-size:21px}
+.swipe-edge small {font-size:10px;line-height:1.22;text-align:center;max-width:58px}
+.swipe-edge.left {color:#ffb0a3}.swipe-edge.right {color:#a0ebc0}
+.swipe-deck[data-drag="left"] .swipe-edge.left,.swipe-deck[data-drag="right"] .swipe-edge.right {
+  opacity:1;transform:translateY(-50%) scale(1.10)}
+.swipe-help {text-align:center;color:#baa38e;font-size:12px;line-height:1.55;margin:1px 10px 13px}
+.swipe-actions {display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:6px 3px 12px}
+.swipe-action {border-radius:var(--radius-pill);padding:14px 9px;min-height:51px;font-size:13px;font-weight:760;
+  border:1px solid rgba(255,225,186,.16);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transition:transform .42s var(--spring),filter .3s ease}
+.swipe-action.unknown {background:rgba(216,80,67,.17);border-color:rgba(255,135,111,.28);color:#ffc3b4}
+.swipe-action.known {background:rgba(57,180,114,.17);border-color:rgba(121,229,156,.29);color:#b6efcb}
+.swipe-action:active {transform:scale(.96)}
+.swipe-next {width:100%;margin:4px auto 10px;display:block;animation:glassRise .5s var(--spring) both}
+#practice.flash-focus .fab {display:none!important}
+/* Full responsive lockup and reduced-motion support. */
+@media (max-width:380px) {
+  #practice.flash-focus .carousel-stage {height:407px}
+  #practice.flash-focus .carousel-stage.timer-mode {height:470px}
+  #practice.flash-focus .carousel-stage.timer-mode .category-card.is-center {width:min(249px,73vw);height:286px}
+  .swipe-deck {min-height:392px}.swipe-card,.swipe-deck-back {height:309px;width:min(265px,74vw)}
+}
+@media (prefers-reduced-motion:reduce) {
+  .swipe-card,.swipe-answer,.swipe-progress>span {transition-duration:.01ms!important}
+}
+
+</style></head>
+<body>
+<div class="app">
+<header class="top"><div><div class="eyebrow">ТВОЙ ЛИЧНЫЙ СЛОВАРЬ</div><div class="brand">Vocabulary<span style="color:var(--blue)">.</span></div></div><div class="avatar">✦</div></header>
+<section id="home" class="page active"><div class="hero"><div class="hero-liquid" aria-hidden="true"><span class="orb orb1"></span><span class="orb orb2"></span><span class="orb orb3"></span><span class="orb orb4"></span></div><div class="hero-row"><div class="sub">Мой словарный запас</div><div class="hero-bubble">✦ Мой прогресс</div></div><div class="hero-num" id="totalHero">0</div><div class="sub">слов и выражений в коллекции</div><div style="margin-top:20px" class="hero-row"><span class="sub">Выучено</span><b id="learnedHero">0%</b></div><div class="progress" style="background:#ffffff45;margin-top:8px"><span id="heroProgress" style="width:0%;background:white"></span></div></div>
+<div class="stats"><div class="stat"><div class="stat-num" id="statWords">0</div><div class="stat-label">Слова</div></div><div class="stat"><div class="stat-num" id="statPhrases">0</div><div class="stat-label">Фразы</div></div><div class="stat"><div class="stat-num" id="statReview">0</div><div class="stat-label">На повторение</div></div></div>
+<div class="card"><div class="card-head"><span>Продолжить обучение</span><button class="link" onclick="showPage('practice')">Тренировка →</button></div><div style="display:flex;align-items:center;gap:14px"><div style="font-size:30px">🎯</div><div style="flex:1"><b>Небольшие шаги каждый день</b><div class="sub" style="margin-top:4px">Повторяй слова, чтобы они оставались в памяти.</div></div></div></div>
+<div class="card-head" style="padding:4px 2px 10px"><span>Быстрый доступ</span></div><div class="quick"><button onclick="openForm('word')"><div class="ico" style="background:#edf2ff;color:#4778e8">＋</div><strong>Новое слово</strong><small>Добавить в словарь</small></button><button onclick="openForm('phrase')"><div class="ico" style="background:#f5efff;color:#9170d8">❞</div><strong>Новая фраза</strong><small>Сохранить выражение</small></button></div>
+<div class="card" style="margin-top:14px"><div class="card-head"><span>Недавно добавлено</span><button class="link" onclick="showPage('dictionary')">Весь словарь →</button></div><div id="recentList"></div></div></section>
+<section id="dictionary" class="page"><div class="section-title">Словарь</div><div class="search"><span>⌕</span><input id="wordSearch" placeholder="Поиск слова или перевода..." oninput="renderDictionary()"></div><div class="filters" id="categoryFilters"></div><div id="categorySuggestions"></div><div class="card" style="padding:5px 16px"><div class="card-head" style="padding:12px 0 4px;margin:0"><span id="dictCount">Все слова</span><button class="link" onclick="toggleSort()" id="sortLabel">A–Z ↕</button></div><div id="wordList"></div></div></section>
+<section id="phrases" class="page"><div class="section-title">Фразы и выражения</div><div class="search"><span>⌕</span><input id="phraseSearch" placeholder="Найти фразу..." oninput="renderPhrases()"></div><div id="phraseList" class="card" style="padding:5px 16px"></div></section>
+<section id="practice" class="page"><div class="section-title">Тренировка</div><div class="card practice-intro"><div class="card-head"><span>Твоя подготовка</span><span style="color:var(--green);font-size:12px">● В своём темпе</span></div><div style="display:flex;align-items:center;gap:15px"><div style="font-size:35px">🧠</div><div><b>Закрепляй знания</b><div class="sub" style="margin-top:4px">Выбери режим и потренируй слова из своего словаря.</div></div></div></div><div class="mode-grid"><button class="mode" onclick="startPractice('flash')"><div class="mi">🃏</div><b>Карточки</b><small>Вспоминай перевод</small></button><button class="mode" onclick="startPractice('choice')"><div class="mi">☑️</div><b>Выбор ответа</b><small>Проверь себя</small></button><button class="mode" onclick="startPractice('typing')"><div class="mi">⌨️</div><b>Написание</b><small>Вспомни английское слово</small></button><button class="mode" onclick="startPractice('audio')"><div class="mi">🔊</div><b>На слух</b><small>Узнай слово по звучанию</small></button></div><div id="flashCategoryPicker" class="flash-category-picker hidden"></div><div id="practiceArea" class="card hidden" style="margin-top:14px"></div><div class="card practice-knowledge" style="margin-top:14px"><div class="card-head"><span>Мои знания</span></div><div class="sub" id="knowledgeText">Добавь первые слова, чтобы увидеть статистику.</div></div></section>
+<section id="settings" class="page"><div class="section-title">Настройки</div><div class="card"><div class="card-head">Мои данные</div><div class="sub">Словарь хранится на этом устройстве. Регулярно сохраняй резервную копию.</div><div class="setting-row"><div><b>Экспорт словаря</b><div class="sub">Скачать файл JSON</div></div><button class="secondary" onclick="exportData()">Экспорт</button></div><div class="setting-row"><div><b>Импорт словаря</b><div class="sub">Восстановить из файла</div></div><button class="secondary" onclick="document.getElementById('importFile').click()">Импорт</button><input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)"></div><div class="setting-row"><div><b>Очистить словарь</b><div class="sub">Удалить все записи</div></div><button class="outline" onclick="clearData()">Очистить</button></div></div><div class="card"><div class="card-head">О Vocabulary</div><div class="sub">Версия 0.6 · Персональный английский словарь</div><div class="sub" style="margin-top:9px">Первый прототип. Данные сохраняются локально в браузере. Не очищай данные сайта без предварительного экспорта.</div></div></section>
+</div>
+<button class="fab" id="fab" onclick="openForm('word')">＋</button>
+<nav class="nav"><div class="nav-inner"><button class="active" data-page="home" onclick="showPage('home')"><span class="ni">⌂</span>Главная</button><button data-page="dictionary" onclick="showPage('dictionary')"><span class="ni">▤</span>Словарь</button><button data-page="phrases" onclick="showPage('phrases')"><span class="ni">❞</span>Фразы</button><button data-page="practice" onclick="showPage('practice')"><span class="ni">◉</span>Учить</button><button data-page="settings" onclick="showPage('settings')"><span class="ni">⚙</span>Ещё</button></div></nav>
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="sheet"><div class="sheet-top"><h2 id="formTitle">Новое слово</h2><button class="close" onclick="closeModal()">×</button></div><form id="entryForm" onsubmit="saveEntry(event)"><input type="hidden" id="entryType"><input type="hidden" id="entryId"><div class="field"><label id="termLabel">АНГЛИЙСКОЕ СЛОВО</label><input id="term" required placeholder="Например, nephew" autocomplete="off"></div><div class="field"><label>ПЕРЕВОД</label><input id="translation" required placeholder="Например, племянник"></div><div class="row2"><div class="field"><label>ТРАНСКРИПЦИЯ</label><input id="transcription" placeholder="/ˈnef.juː/"></div><div class="field"><label>КАТЕГОРИЯ</label><select id="category"></select></div></div><div class="transcription-note" id="transcriptionStatus">Транскрипция подставится автоматически после ввода слова.</div><div class="field"><label>ПРИМЕР ИСПОЛЬЗОВАНИЯ</label><textarea id="example" placeholder="My nephew is five years old."></textarea></div><div class="form-actions"><button type="button" class="outline" onclick="closeModal()">Отмена</button><button type="submit" class="primary">Сохранить</button></div><div style="margin-top:12px"><button type="button" class="secondary full" onclick="checkWord()">Проверить английское слово ↗</button><div class="sub" id="checkResult" style="margin:8px 3px 0"></div></div></form></div></div>
+<div class="modal" id="detailModal" onclick="if(event.target===this)closeDetail()"><div class="sheet"><div class="sheet-top"><h2>Карточка слова</h2><button class="close" onclick="closeDetail()">×</button></div><div id="detailContent"></div></div></div><div class="toast" id="toast"></div>
+<script>
+const CATS=['Семья и родственники','Дом и интерьер','Еда и рестораны','Путешествия','Общение','Работа и профессия','Эмоции и чувства','Природа','Здоровье','Другое'];let db=JSON.parse(localStorage.getItem('vocabulary-db')||'{"words":[],"phrases":[]}');if(!db.words)db={words:[],phrases:[]};let sortAsc=true,activeCat='Все',practiceItems=[],practiceIndex=0,practiceMode='flash',flipped=false,correctCount=0;let selectedPracticeCategory=0,activePracticeCategory='Все слова',carouselPointerStart=null,carouselDragged=false;let flashAwaitingNext=false,flashTransitioning=false,flashDragState=null,timedLaunching=false;let timedMode=false,timedDuration=60,activeTimedDuration=60,timedSessionActive=false,timedEndsAt=0,timedInterval=null,lastTimerSecond=null,timedDragState=null,timedDragConsumed=false;
+const $=id=>document.getElementById(id);function persist(){localStorage.setItem('vocabulary-db',JSON.stringify(db));renderAll()}function toast(s){$('toast').textContent=s;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function showPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(p).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));$('fab').style.display=['home','dictionary','phrases'].includes(p)?'block':'none';if(p==='dictionary')renderDictionary();if(p==='phrases')renderPhrases();if(p==='home')renderHome();if(p!=='practice')$('practice').classList.remove('flash-focus')}
+let transcriptionRequest=0;
+function openForm(type,id=''){let e=id?[...db.words,...db.phrases].find(x=>x.id===id):null;$('entryType').value=type;$('entryId').value=id;$('formTitle').textContent=(e?'Редактировать':type==='word'?'Новое слово':'Новая фраза');$('termLabel').textContent=type==='word'?'АНГЛИЙСКОЕ СЛОВО':'АНГЛИЙСКАЯ ФРАЗА';$('term').placeholder=type==='word'?'Например, nephew':'Например, by the way';$('term').value=e?.term||'';$('translation').value=e?.translation||'';$('transcription').value=e?.transcription||'';$('transcriptionStatus').textContent=e?.transcription?'Транскрипция сохранена. Её можно изменить вручную.':'Транскрипция подставится автоматически после ввода слова.';$('example').value=e?.example||'';$('checkResult').textContent='';$('category').innerHTML=CATS.map(c=>`<option ${e?.category===c?'selected':''}>${esc(c)}</option>`).join('');$('modal').classList.add('show');if(type==='word')$('term').onblur=fetchTranscription}
+function closeModal(){$('modal').classList.remove('show')}
+async function fetchTranscription(){let term=$('term').value.trim();if(!term||$('entryType').value!=='word'||$('transcription').value.trim())return;let request=++transcriptionRequest;$('transcriptionStatus').innerHTML='<span class="loading-dot"></span>Ищем транскрипцию…';try{let r=await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/'+encodeURIComponent(term));if(!r.ok)throw Error('not found');let data=await r.json();if(request!==transcriptionRequest||$('term').value.trim()!==term)return;let phonetics=(data[0]?.phonetics||[]).filter(p=>p.text);let uk=phonetics.find(p=>p.audio&&p.text&&String(p.audio).includes('-uk'))||phonetics[0];let us=phonetics.find(p=>p.audio&&p.text&&String(p.audio).includes('-us'))||phonetics.find(p=>p.text);let ipa=uk?.text||us?.text;if(ipa){$('transcription').value=ipa;$('transcriptionStatus').textContent=uk&&us&&uk.text!==us.text?'Найдена транскрипция. В поле указан британский вариант; американский: '+us.text:'Транскрипция заполнена автоматически. Проверь и при необходимости исправь.'}else{$('transcriptionStatus').textContent='Слово найдено, но транскрипция не предоставлена. Можно заполнить вручную.'}}catch(e){if(request===transcriptionRequest)$('transcriptionStatus').textContent='Не удалось получить транскрипцию. Проверь подключение или заполни вручную.'}}function saveEntry(ev){ev.preventDefault();let type=$('entryType').value,id=$('entryId').value,arr=type==='word'?db.words:db.phrases;let obj={id:id||uid(),term:$('term').value.trim(),translation:$('translation').value.trim(),transcription:$('transcription').value.trim(),category:$('category').value,example:$('example').value.trim(),created:id?(arr.find(x=>x.id===id)?.created||Date.now()):Date.now(),level:id?(arr.find(x=>x.id===id)?.level||0):0,correct:id?(arr.find(x=>x.id===id)?.correct||0):0};let i=arr.findIndex(x=>x.id===id);if(i>=0)arr[i]=obj;else arr.push(obj);closeModal();persist();toast(id?'Изменения сохранены':'Добавлено в Vocabulary')}
+async function checkWord(){let w=$('term').value.trim();if(!w)return toast('Сначала введи английское слово');$('checkResult').textContent='Проверяем написание…';try{let r=await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/'+encodeURIComponent(w));if(r.ok){let j=await r.json();$('checkResult').textContent='✓ Слово найдено в английском словаре. Проверь, подходит ли значение к твоему контексту.'}else{$('checkResult').textContent='Слово не найдено. Проверь написание или попробуй другую форму.'}}catch(e){$('checkResult').textContent='Не удалось проверить: нужна связь с интернетом. Запись можно сохранить вручную.'}}
+function renderAll(){renderHome();renderDictionary();renderPhrases();$('knowledgeText').textContent=db.words.length?`${db.words.filter(x=>x.level>=3).length} из ${db.words.length} слов отмечены как хорошо знакомые.`:'Добавь первые слова, чтобы увидеть статистику.'}
+function renderHome(){let all=db.words.length+db.phrases.length,learn=db.words.filter(x=>x.level>=3).length,pct=db.words.length?Math.round(learn/db.words.length*100):0;$('totalHero').textContent=all;$('learnedHero').textContent=pct+'%';$('heroProgress').style.width=pct+'%';$('statWords').textContent=db.words.length;$('statPhrases').textContent=db.phrases.length;$('statReview').textContent=db.words.filter(x=>x.level<3).length;$('recentList').innerHTML=[...db.words,...db.phrases].sort((a,b)=>b.created-a.created).slice(0,4).map(entryHTML).join('')||'<div class="empty"><div class="big">📖</div>Здесь появятся твои первые слова.<br>Нажми «Новое слово», чтобы начать.</div>'}
+function entryHTML(x){return `<div class="entry" onclick="openDetail('${x.id}')"><div class="letter">${esc(x.term[0]?.toUpperCase()||'•')}</div><div class="entry-main"><div class="entry-word">${esc(x.term)}</div><div class="entry-translation">${esc(x.translation)}</div></div><div class="entry-right">›</div></div>`}
+function renderDictionary(){let q=($('wordSearch')?.value||'').toLowerCase();let cats=['Все',...new Set([...CATS,...db.words.map(x=>x.category).filter(Boolean)])];$('categoryFilters').innerHTML=cats.map(c=>`<button class="chip ${activeCat===c?'selected':''}" onclick="activeCat='${esc(c)}';renderDictionary()">${esc(c)}</button>`).join('');let a=db.words.filter(x=>(activeCat==='Все'||x.category===activeCat)&&(`${x.term} ${x.translation} ${x.transcription}`).toLowerCase().includes(q)).sort((a,b)=>sortAsc?a.term.localeCompare(b.term):b.term.localeCompare(a.term));$('dictCount').textContent=`${a.length} ${a.length===1?'слово':'слов'}`;$('sortLabel').textContent=sortAsc?'A–Z ↕':'Z–A ↕';$('wordList').innerHTML=a.map(entryHTML).join('')||'<div class="empty"><div class="big">🔎</div>Пока ничего не найдено.<br>Добавь слово или измени поиск.</div>';renderCategorySuggestions()}
+const CATEGORY_SUGGESTIONS={
+'Семья и родственники':[['niece','племянница'],['cousin','двоюродный брат / сестра'],['aunt','тётя'],['uncle','дядя'],['grandson','внук'],['granddaughter','внучка'],['relatives','родственники'],['siblings','братья и сёстры']],
+'Дом и интерьер':[['hallway','прихожая / коридор'],['attic','чердак'],['basement','подвал'],['shelf','полка'],['drawer','выдвижной ящик'],['ceiling','потолок'],['curtains','шторы'],['wardrobe','шкаф']],
+'Еда и рестораны':[['appetizer','закуска'],['main course','основное блюдо'],['side dish','гарнир'],['dessert','десерт'],['bill','счёт'],['ingredients','ингредиенты'],['reservation','бронь / бронирование'],['cutlery','столовые приборы']],
+'Путешествия':[['accommodation','проживание'],['luggage','багаж'],['departure','отправление'],['arrival','прибытие'],['sightseeing','осмотр достопримечательностей'],['boarding pass','посадочный талон'],['itinerary','маршрут поездки'],['overseas','за границей']],
+'Общение':[['actually','на самом деле'],['by the way','кстати'],['I mean','я имею в виду'],['it depends','это зависит'],['to figure out','разобраться'],['to get along','ладить'],['to bring up','поднять тему'],['to make sure','убедиться']],
+'Работа и профессия':[['colleague','коллега'],['deadline','срок сдачи'],['meeting','встреча / совещание'],['task','задача'],['requirement','требование'],['schedule','расписание'],['feedback','обратная связь'],['workload','рабочая нагрузка']],
+'Эмоции и чувства':[['relieved','испытывающий облегчение'],['frustrated','раздосадованный'],['grateful','благодарный'],['confident','уверенный'],['anxious','тревожный'],['overwhelmed','перегруженный'],['delighted','в восторге'],['disappointed','разочарованный']],
+'Природа':[['wildlife','дикая природа'],['shore','берег'],['cliff','утёс'],['meadow','луг'],['branch','ветка'],['bark','кора дерева'],['stream','ручей'],['wildflower','полевой цветок']],
+'Здоровье':[['symptom','симптом'],['prescription','рецепт'],['appointment','приём / запись'],['recovery','восстановление'],['sore throat','боль в горле'],['dizzy','испытывающий головокружение'],['treatment','лечение'],['check-up','медицинский осмотр']],
+'Другое':[['useful','полезный'],['although','хотя'],['unless','если не'],['nevertheless','тем не менее'],['to improve','улучшать'],['to avoid','избегать'],['to achieve','достигать'],['to notice','замечать']]};
+function renderCategorySuggestions(){let host=$('categorySuggestions');if(!host)return;if(activeCat==='Все'){host.innerHTML='';return}let known=new Set(db.words.map(x=>x.term.toLowerCase()));let list=(CATEGORY_SUGGESTIONS[activeCat]||[]).filter(x=>!known.has(x[0].toLowerCase())).slice(0,5);if(!list.length){host.innerHTML='<div class="suggestions"><b>Отлично!</b><div class="sub" style="margin-top:5px">Все предложенные слова этой подборки уже в твоём словаре.</div></div>';return}host.innerHTML=`<div class="suggestions"><div class="card-head" style="margin-bottom:5px"><span>✨ Можешь добавить</span><span class="sub">${esc(activeCat)}</span></div><div class="sub" style="margin-bottom:8px">Идеи слов для этой категории</div>${list.map((x,i)=>`<div class="suggestion-row"><div class="suggestion-main"><div class="suggestion-word">${esc(x[0])}</div><div class="suggestion-translation">${esc(x[1])}</div></div><button class="suggestion-add" onclick="addSuggestedWord('${esc(x[0])}','${esc(x[1])}','${esc(activeCat)}')">＋ Добавить</button></div>`).join('')}</div>`}
+async function addSuggestedWord(term,translation,category){if(db.words.some(x=>x.term.toLowerCase()===term.toLowerCase()))return toast('Это слово уже есть в словаре');let item={id:uid(),term,translation,transcription:'',category,example:'',created:Date.now(),level:0,correct:0};db.words.push(item);persist();toast('Добавлено: '+term);try{let r=await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/'+encodeURIComponent(term));if(r.ok){let d=await r.json(),p=(d[0]?.phonetics||[]).find(x=>x.text);if(p?.text){item.transcription=p.text;persist()}}}catch(e){/* keep the word; transcription can be added later */}}function toggleSort(){sortAsc=!sortAsc;renderDictionary()}
+function renderPhrases(){let q=($('phraseSearch')?.value||'').toLowerCase();let a=db.phrases.filter(x=>(`${x.term} ${x.translation}`).toLowerCase().includes(q)).sort((x,y)=>x.term.localeCompare(y.term));$('phraseList').innerHTML=a.map(entryHTML).join('')||'<div class="empty"><div class="big">💬</div>Здесь будут твои выражения и устойчивые фразы.</div>'}
+function openDetail(id){let x=[...db.words,...db.phrases].find(e=>e.id===id);if(!x)return;$('detailContent').innerHTML=`<div class="detail-word">${esc(x.term)}</div><div class="detail-trans">${esc(x.translation)}</div>${x.transcription?`<div class="pill">${esc(x.transcription)}</div>`:''}<div class="sub" style="margin-top:17px">КАТЕГОРИЯ</div><b>${esc(x.category||'Без категории')}</b>${x.example?`<div class="sub" style="margin-top:17px">ПРИМЕР</div><div style="margin-top:5px">${esc(x.example)}</div>`:''}<div class="form-actions" style="margin-top:24px"><button class="outline" onclick="speak('${esc(x.term).replace(/'/g,"\\'")}')">🔊 Слушать</button><button class="secondary" onclick="editEntry('${id}')">Изменить</button><button class="outline" onclick="deleteEntry('${id}')">Удалить</button></div>`;$('detailModal').classList.add('show')}function closeDetail(){$('detailModal').classList.remove('show')}function editEntry(id){let type=db.words.some(x=>x.id===id)?'word':'phrase';closeDetail();openForm(type,id)}function deleteEntry(id){if(!confirm('Удалить эту запись?'))return;db.words=db.words.filter(x=>x.id!==id);db.phrases=db.phrases.filter(x=>x.id!==id);closeDetail();persist();toast('Запись удалена')}function speak(t){if(!('speechSynthesis'in window))return toast('Озвучивание не поддерживается');let u=new SpeechSynthesisUtterance(t);u.lang='en-US';speechSynthesis.speak(u)}
+function startPractice(mode){
+  if(mode==='flash'){showFlashCategoryPicker();return}
+  stopTimedClock();timedSessionActive=false;timedMode=false;resetTimedCardDrag();
+  if(!db.words.length){toast('\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u0434\u043e\u0431\u0430\u0432\u044c \u0441\u043b\u043e\u0432\u0430 \u0432 \u0441\u043b\u043e\u0432\u0430\u0440\u044c');return}
+  $('practice').classList.remove('flash-focus');
+  $('flashCategoryPicker').classList.add('hidden');
+  $('practiceArea').classList.remove('flash-session');
+  practiceItems=[...db.words].sort(()=>Math.random()-.5);practiceIndex=0;correctCount=0;practiceMode=mode;activePracticeCategory='Все слова';flipped=false;$('practiceArea').classList.remove('hidden');$('practiceArea').classList.remove('flash-session');renderPractice();$('practiceArea').scrollIntoView({behavior:'smooth',block:'center'})
+}
+function practiceCategoryList(){
+  const extras=[...new Set(db.words.map(x=>x.category).filter(x=>x&&!CATS.includes(x)))];
+  return ['Все слова',...CATS,...extras];
+}
+function practiceCategoryMeta(name){
+  const words=name==='Все слова'?[...db.words]:db.words.filter(x=>x.category===name);
+  const suggestions=name==='Все слова'?[]:(CATEGORY_SUGGESTIONS[name]||[]);
+  const preview=(words.length?words.map(x=>x.term):suggestions.map(x=>x[0])).slice(0,2);
+  const index=CATS.indexOf(name);
+  const visuals=[
+    ['\u{1F46A}','#f5e8f1','#dfa9c8','#9a6289'],
+    ['\u{1F3E1}','#e5f2ed','#9acbb9','#4b927b'],
+    ['\u{1F37D}\u{FE0F}','#fff0df','#f5c17e','#bd7b37'],
+    ['\u{2708}\u{FE0F}','#e6efff','#9dbaf3','#5278c7'],
+    ['\u{1F4AC}','#f0eaff','#bba8ed','#8065c5'],
+    ['\u{1F4BC}','#e7edf3','#aabccc','#617d98'],
+    ['\u{1F49C}','#fce9ee','#f1a8bd','#bd6681'],
+    ['\u{1F33F}','#e9f3e2','#b4d49c','#638d52'],
+    ['\u{2728}','#e4f3f7','#9dd4df','#4d91a1'],
+    ['\u{2726}','#efeff5','#bfc1d2','#777b98']
+  ];
+  const visual=name==='Все слова'?['\u{2728}','#e8efff','#a9bdf4','#526fc1']:(visuals[index]||['\u{2726}','#efeff5','#bfc1d2','#777b98']);
+  return {name,words,count:words.length,preview,emoji:visual[0],a:visual[1],b:visual[2],c:visual[3]};
+}
+function wordCountLabel(n){
+  const mod10=n%10,mod100=n%100;
+  if(mod10===1&&mod100!==11)return n+' \u0441\u043b\u043e\u0432\u043e';
+  if(mod10>=2&&mod10<=4&&(mod100<12||mod100>14))return n+' \u0441\u043b\u043e\u0432\u0430';
+  return n+' \u0441\u043b\u043e\u0432';
+}
+function showFlashCategoryPicker(){
+  stopTimedClock();timedSessionActive=false;timedMode=false;resetTimedCardDrag();
+  $('practice').classList.add('flash-focus');
+  $('practiceArea').classList.remove('flash-session');
+  $('practiceArea').classList.add('hidden');
+  $('flashCategoryPicker').classList.remove('hidden');
+  renderPracticeCategoryCarousel();
+  setTimeout(()=>$('flashCategoryPicker').scrollIntoView({behavior:'smooth',block:'start'}),60);
+}
+function renderPracticeCategoryCarousel(){
+  const host=$('flashCategoryPicker');if(!host)return;
+  const names=practiceCategoryList();selectedPracticeCategory=Math.max(0,Math.min(selectedPracticeCategory,names.length-1));
+  const cards=names.map(practiceCategoryMeta);const selected=cards[selectedPracticeCategory];
+  const cardHtml=cards.map((item,i)=>{
+    let pos='is-hidden';
+    const preview=item.preview.length?item.preview.map(w=>`<span>${esc(w)}</span>`).join(''):`<span>Подборка слов</span>`;
+    return `<button type="button" class="category-card ${pos}" style="--tone-a:${item.a};--tone-b:${item.b};--tone-c:${item.c}" onclick="categoryCardClick(${i},event)" onpointerdown="categoryCardPointerDown(event,${i})" onpointermove="categoryCardPointerMove(event)" onpointerup="categoryCardPointerUp(event)" onpointercancel="categoryCardPointerCancel(event)" aria-pressed="${i===selectedPracticeCategory}">
+      <div class="category-card-top"><span>VOCABULARY</span><span>${String(i+1).padStart(2,'0')} / ${String(cards.length).padStart(2,'0')}</span></div>
+      <div class="category-art"><span class="category-art-icon">${item.emoji}</span></div>
+      <div class="category-card-copy"><div class="category-kicker">КОЛЛЕКЦИЯ СЛОВ</div><div class="category-name">${esc(item.name)}</div><div class="category-count"><strong>${item.count}</strong><span>в словаре</span></div></div>
+      <div class="category-preview">${preview}</div><div class="category-card-footer"><span>${timedMode?'ЗАЖМИ И ПОТЯНИ ВНИЗ':'СМАХНИ ДЛЯ ВЫБОРА'}</span><span>${timedMode?'↓':'↗'}</span></div>
+    </button>`;
+  }).join('');
+  const canStart=selected.count>0;
+  const hint=canStart?'Карточки будут только из этой категории.':'В этой категории пока нет слов. Можно подобрать новые в словаре.';
+  host.innerHTML=`<div class="picker-topline"><button class="picker-back" type="button" onclick="leaveFlashFocus()" aria-label="Назад к режимам тренировки">‹</button><div class="picker-heading"><div><div class="eyebrow">РЕЖИМ КАРТОЧЕК</div><h3 id="pickerTitle">Выбери категорию</h3><div class="picker-subtitle" id="pickerSubtitle">Смахивай карточки в стороны</div></div></div></div>
+    <div class="carousel-stage" id="categoryCarousel" role="group" aria-label="Выбор категории" tabindex="0" onpointerdown="carouselPointerDown(event)" onpointerup="carouselPointerUp(event)" onpointercancel="carouselPointerCancel()" onkeydown="carouselKeydown(event)">${cardHtml}
+      <div class="activation-drive" id="activationDrive" aria-hidden="true"><div class="drive-caption">ПОТЯНИ КАРТОЧКУ В СВЕТЯЩИЙСЯ СЛОТ</div><div class="drive-slot" id="activationDriveSlot"></div></div>
+    </div>
+    <div class="carousel-controls" id="carouselControls"><button class="carousel-arrow" type="button" aria-label="Предыдущая категория" onclick="movePracticeCategory(-1)">‹</button><div class="carousel-dots">${cards.map((_,i)=>`<button type="button" class="carousel-dot ${i===selectedPracticeCategory?'active':''}" aria-label="Категория ${i+1}" onclick="selectPracticeCategory(${i})"></button>`).join('')}</div><button class="carousel-arrow" type="button" aria-label="Следующая категория" onclick="movePracticeCategory(1)">›</button></div>
+    <div class="category-selection" id="categorySelection"><div class="selection-overline">ВЫБРАННАЯ КАТЕГОРИЯ</div><div class="selection-row"><div class="selection-name" id="selectedCategoryName">${esc(selected.name)}</div><div class="selection-count" id="selectedCategoryCount">${wordCountLabel(selected.count)}</div></div><div class="selection-hint" id="selectedCategoryHint">${hint}</div>
+      <div class="selection-actions"><button type="button" class="primary category-start" id="selectedCategoryAction" onclick="${canStart?'beginFlashPractice()':'openSelectedCategoryInDictionary()'}">${canStart?'Начать тренировку':'Подобрать слова'}</button><button type="button" class="timed-mode-button" id="timedModeButton" onclick="toggleTimedMode(true)" ${canStart?'':'disabled'}><span>◷</span> На время</button></div>
+      <div class="timed-options hidden" id="timedOptions"><div class="timed-options-head"><span>Длительность раунда</span><span>Таймер стартует при запуске</span></div><div class="duration-choices"><button type="button" class="duration-choice ${timedDuration===30?'active':''}" data-duration="30" onclick="setTimedDuration(30)">30 сек</button><button type="button" class="duration-choice ${timedDuration===60?'active':''}" data-duration="60" onclick="setTimedDuration(60)">60 сек</button><button type="button" class="duration-choice ${timedDuration===90?'active':''}" data-duration="90" onclick="setTimedDuration(90)">90 сек</button></div><div class="timed-instruction">Зажми центральную карточку и потяни её вниз, пока она не войдёт в светящийся слот. Таймер запустится после погружения карточки.</div><button type="button" class="timed-cancel" onclick="toggleTimedMode(false)">← Вернуться к выбору категорий</button></div>
+    </div>`;
+  requestAnimationFrame(updatePracticeCategoryCarousel);
+}
+function updatePracticeCategoryCarousel(){
+  const names=practiceCategoryList();if(!names.length)return;
+  const selected=practiceCategoryMeta(names[selectedPracticeCategory]);
+  const stage=$('categoryCarousel');if(!stage)return;
+  const cards=[...stage.querySelectorAll('.category-card')];
+  cards.forEach((card,i)=>{
+    const diff=i-selectedPracticeCategory;let pos='is-hidden';
+    if(diff===0)pos='is-center';else if(diff===-1)pos='is-prev';else if(diff===1)pos='is-next';else if(diff===-2)pos='is-far-prev';else if(diff===2)pos='is-far-next';
+    card.className='category-card '+pos;
+    card.setAttribute('aria-pressed',String(i===selectedPracticeCategory));
+    const footer=card.querySelector('.category-card-footer span:first-child');if(footer)footer.textContent=timedMode&&i===selectedPracticeCategory?'ЗАЖМИ И ПОТЯНИ ВНИЗ':'СМАХНИ ДЛЯ ВЫБОРА';
+    const footerIcon=card.querySelector('.category-card-footer span:last-child');if(footerIcon)footerIcon.textContent=timedMode&&i===selectedPracticeCategory?'↓':'↗';
+  });
+  stage.classList.toggle('timer-mode',timedMode);stage.style.setProperty('--charge','0');
+  $('carouselControls')?.classList.toggle('hidden',timedMode);
+  $('categorySelection')?.classList.toggle('timed-active',timedMode);
+  $('timedOptions')?.classList.toggle('hidden',!timedMode);
+  $('pickerTitle').textContent=timedMode?'Режим на время':'Выбери категорию';
+  $('pickerSubtitle').textContent=timedMode?'Потяни карточку вниз':'Смахивай карточки в стороны';
+  $('selectedCategoryName').textContent=selected.name;
+  $('selectedCategoryCount').textContent=wordCountLabel(selected.count);
+  $('selectedCategoryHint').textContent=timedMode?'Зажми карточку и перемести её в светящийся слот внизу.':(selected.count?'Карточки будут только из этой категории.':'В этой категории пока нет слов. Можно подобрать новые в словаре.');
+  const action=$('selectedCategoryAction');
+  if(action){action.textContent=selected.count?'Начать тренировку':'Подобрать слова';action.onclick=selected.count?beginFlashPractice:openSelectedCategoryInDictionary;}
+  $('timedModeButton').disabled=!selected.count;
+  stage.classList.remove('drive-ready','drive-fired');
+  $('timedOptions').querySelectorAll('.duration-choice').forEach(button=>button.classList.toggle('active',Number(button.dataset.duration)===timedDuration));
+}
+function selectPracticeCategory(index){
+  if(timedMode)return;
+  const names=practiceCategoryList();if(!names.length)return;
+  selectedPracticeCategory=(index+names.length)%names.length;
+  updatePracticeCategoryCarousel();
+}
+function leaveFlashFocus(){stopTimedClock();timedSessionActive=false;timedMode=false;resetTimedCardDrag();$('flashCategoryPicker').classList.add('hidden');$('practiceArea').classList.add('hidden');$('practice').classList.remove('flash-focus');}
+function movePracticeCategory(delta){selectPracticeCategory(selectedPracticeCategory+delta)}
+function categoryCardClick(index,event){
+  if(timedDragConsumed){event.preventDefault();event.stopPropagation();timedDragConsumed=false;return}
+  if(timedMode){event.preventDefault();return}
+  if(carouselDragged){event.preventDefault();event.stopPropagation();return}
+  if(index!==selectedPracticeCategory)selectPracticeCategory(index);
+}
+function carouselPointerDown(event){if(timedMode)return;if(event.pointerType==='mouse'&&event.button!==0)return;carouselPointerStart={x:event.clientX,y:event.clientY,id:event.pointerId};}
+function carouselPointerUp(event){if(timedMode||!carouselPointerStart)return;const dx=event.clientX-carouselPointerStart.x;const dy=event.clientY-carouselPointerStart.y;carouselPointerStart=null;if(Math.abs(dx)>38&&Math.abs(dx)>Math.abs(dy)*1.15){carouselDragged=true;movePracticeCategory(dx<0?1:-1);setTimeout(()=>carouselDragged=false,260)}}
+function carouselPointerCancel(){carouselPointerStart=null}
+function carouselKeydown(event){if(timedMode)return;if(event.key==='ArrowRight'){event.preventDefault();movePracticeCategory(1)}else if(event.key==='ArrowLeft'){event.preventDefault();movePracticeCategory(-1)}else if(event.key==='Enter'){event.preventDefault();beginFlashPractice()}}
+function toggleTimedMode(force){
+  const next=typeof force==='boolean'?force:!timedMode;
+  if(next&&!(practiceCategoryMeta(practiceCategoryList()[selectedPracticeCategory]||'Все слова').count)){toast('В этой категории пока нет слов');return}
+  timedMode=next;resetTimedCardDrag();updatePracticeCategoryCarousel();
+}
+function setTimedDuration(seconds){timedDuration=seconds;$('timedOptions').querySelectorAll('.duration-choice').forEach(button=>button.classList.toggle('active',Number(button.dataset.duration)===seconds));}
+function resetTimedCardDrag(){
+  timedLaunching=false;
+  const state=timedDragState;
+  if(state?.card){const card=state.card;card.classList.remove('is-grabbed','is-dragging','is-armed','is-launching');
+    for(const prop of ['--drag-x','--drag-y','--drag-z'])card.style.setProperty(prop,'0px');card.style.setProperty('--drag-scale','1');}
+  timedDragState=null;
+  const stage=$('categoryCarousel');if(stage){stage.classList.remove('drive-ready','drive-fired');stage.style.setProperty('--charge','0')}
+}
+function categoryCardPointerDown(event,index){
+  if(!timedMode||index!==selectedPracticeCategory||timedSessionActive||timedLaunching)return;
+  if(event.pointerType==='mouse'&&event.button!==0)return;
+  event.preventDefault();const card=event.currentTarget;
+  const slot=$('activationDriveSlot');const cardBox=card.getBoundingClientRect();const slotBox=slot?.getBoundingClientRect();const initialGap=slotBox?slotBox.top-cardBox.bottom:110;
+  timedDragState={pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,card,armed:false,moved:false,charge:0,initialGap};
+  card.classList.add('is-grabbed');try{card.setPointerCapture(event.pointerId)}catch(e){}
+}
+function categoryCardPointerMove(event){
+  if(!timedDragState||event.pointerId!==timedDragState.pointerId)return;
+  const state=timedDragState,stage=$('categoryCarousel'),slot=$('activationDriveSlot');if(!stage||!slot)return;
+  const dx=event.clientX-state.startX,dy=event.clientY-state.startY;
+  const baseY=Math.max(0,Math.min(210,dy));
+  const cardRect=state.card.getBoundingClientRect(),slotRect=slot.getBoundingClientRect();
+  const remainingGap=Math.max(0,state.initialGap-baseY);
+  const approachDistance=Math.max(76,state.initialGap+15);
+  const charge=Math.max(0,Math.min(1,(approachDistance-remainingGap)/approachDistance));
+  const magnetX=(slotRect.left+slotRect.width/2)-(cardRect.left+cardRect.width/2);
+  const adjustedX=Math.max(-45,Math.min(45,dx*.22+magnetX*charge*.17));
+  const adjustedY=baseY+charge*12;
+  state.card.style.setProperty('--drag-y',adjustedY+'px');
+  state.card.style.setProperty('--drag-x',adjustedX+'px');
+  state.card.style.setProperty('--drag-scale',String(1-.08*charge));
+  stage.style.setProperty('--charge',charge.toFixed(3));state.charge=charge;
+  if(dy>7){state.moved=true;state.card.classList.add('is-dragging')}
+  state.armed=charge>.82&&dy>65;
+  state.card.classList.toggle('is-armed',state.armed);
+  stage.classList.toggle('drive-ready',state.armed);
+}
+function categoryCardPointerUp(event){
+  if(!timedDragState||event.pointerId!==timedDragState.pointerId)return;
+  const state=timedDragState,card=state.card,armed=state.armed,moved=state.moved;
+  try{if(card.hasPointerCapture(event.pointerId))card.releasePointerCapture(event.pointerId)}catch(e){}
+  timedDragState=null;
+  if(armed){
+    timedLaunching=true;timedDragConsumed=true;const stage=$('categoryCarousel');
+    stage.classList.add('drive-fired');stage.style.setProperty('--charge','1');
+    card.classList.remove('is-grabbed');card.classList.add('is-launching');
+    if(navigator.vibrate)navigator.vibrate(12);
+    // Time begins only when the insertion animation has completed.
+    setTimeout(()=>{if(timedLaunching){timedLaunching=false;launchTimedFlashPractice()}},490);
+    setTimeout(()=>{timedDragConsumed=false},650);
+  }else{
+    card.classList.remove('is-grabbed','is-dragging','is-armed');
+    for(const prop of ['--drag-x','--drag-y','--drag-z'])card.style.setProperty(prop,'0px');
+    card.style.setProperty('--drag-scale','1');
+    $('categoryCarousel')?.classList.remove('drive-ready');
+    $('categoryCarousel')?.style.setProperty('--charge','0');
+    if(moved){timedDragConsumed=true;setTimeout(()=>timedDragConsumed=false,350)}
+  }
+}
+function categoryCardPointerCancel(event){if(!timedDragState)return;resetTimedCardDrag()}
+function openSelectedCategoryInDictionary(){const names=practiceCategoryList();const name=names[selectedPracticeCategory];activeCat=name==='Все слова'?'Все':name;showPage('dictionary');toast('Открыта категория: '+name)}
+function beginFlashPractice(){
+  stopTimedClock();timedSessionActive=false;timedMode=false;
+  const names=practiceCategoryList();const name=names[selectedPracticeCategory]||'Все слова';
+  const selectedWords=name==='Все слова'?[...db.words]:db.words.filter(x=>x.category===name);
+  if(!selectedWords.length){toast('В этой категории пока нет слов');return}
+  activePracticeCategory=name;practiceItems=selectedWords.sort(()=>Math.random()-.5);practiceIndex=0;correctCount=0;practiceMode='flash';flipped=false;flashAwaitingNext=false;flashTransitioning=false;
+  $('flashCategoryPicker').classList.add('hidden');$('practiceArea').classList.remove('hidden');$('practiceArea').classList.add('flash-session');$('practice').classList.add('flash-focus');renderPractice();$('practiceArea').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function stopTimedClock(){if(timedInterval){clearInterval(timedInterval);timedInterval=null}}
+function formatTimer(seconds){const safe=Math.max(0,Math.ceil(seconds));return String(Math.floor(safe/60)).padStart(2,'0')+':'+String(safe%60).padStart(2,'0')}
+function updateTimedTimer(){
+  if(!timedSessionActive)return;
+  const remainingMs=Math.max(0,timedEndsAt-Date.now()),remaining=Math.ceil(remainingMs/1000),ratio=Math.max(0,Math.min(1,remainingMs/(activeTimedDuration*1000)));
+  const timer=$('practiceTimer'),bar=$('practiceTimerProgress');
+  if(timer&&remaining!==lastTimerSecond){timer.textContent=formatTimer(remaining);timer.classList.toggle('urgent',remaining<=10);lastTimerSecond=remaining}
+  if(bar)bar.style.width=(ratio*100)+'%';
+  if(remainingMs<=0)finishTimedPractice('time');
+}
+function launchTimedFlashPractice(){
+  const names=practiceCategoryList(),name=names[selectedPracticeCategory]||'Все слова';
+  const selectedWords=name==='Все слова'?[...db.words]:db.words.filter(x=>x.category===name);
+  if(!selectedWords.length){toast('В этой категории пока нет слов');return}
+  stopTimedClock();activePracticeCategory=name;practiceItems=selectedWords.sort(()=>Math.random()-.5);practiceIndex=0;correctCount=0;practiceMode='flash';flipped=false;flashAwaitingNext=false;flashTransitioning=false;
+  activeTimedDuration=timedDuration;timedSessionActive=true;timedEndsAt=Date.now()+activeTimedDuration*1000;lastTimerSecond=null;
+  updateTimedTimer();timedInterval=setInterval(updateTimedTimer,200);
+  $('flashCategoryPicker').classList.add('hidden');$('practiceArea').classList.remove('hidden');$('practiceArea').classList.add('flash-session');$('practice').classList.add('flash-focus');renderPractice();window.scrollTo({top:0,behavior:'smooth'});
+}
+function finishTimedPractice(reason){
+  if(!timedSessionActive)return;
+  timedSessionActive=false;stopTimedClock();
+  const attempted=Math.min(practiceIndex+((flashAwaitingNext||flashTransitioning)?1:0),practiceItems.length),total=practiceItems.length;flashAwaitingNext=false;flashTransitioning=false;
+  const title=reason==='time'?'Время вышло!':'Все карточки пройдены!';
+  const subtitle=reason==='time'?'Раунд завершён. Отличная работа!':'Ты успел пройти всю подборку до окончания времени.';
+  $('practiceArea').innerHTML=`<div class="timer-result"><div class="timer-result-icon">◷</div><div class="eyebrow">${esc(activePracticeCategory)} · ${activeTimedDuration} СЕКУНД</div><h2>${title}</h2><div class="sub">${subtitle}</div><div class="timer-result-stats"><div class="timer-result-stat"><strong>${correctCount}</strong><span>Знаю</span></div><div class="timer-result-stat"><strong>${attempted}/${total}</strong><span>Карточек пройдено</span></div></div><div class="sub">Можно повторить раунд или выбрать другую категорию.</div></div><button class="primary full" onclick="repeatTimedPractice()">Повторить раунд</button><button class="outline full" style="margin-top:9px" onclick="returnToCategoryPicker()">Выбрать другую категорию</button>`;
+}
+function repeatTimedPractice(){flashAwaitingNext=false;flashTransitioning=false;$('practiceArea').classList.remove('flash-session');selectedPracticeCategory=Math.max(0,practiceCategoryList().indexOf(activePracticeCategory));timedMode=true;$('practiceArea').classList.add('hidden');$('flashCategoryPicker').classList.remove('hidden');renderPracticeCategoryCarousel();$('flashCategoryPicker').scrollIntoView({behavior:'smooth',block:'start'});toast('Потяни карточку в светящийся слот, чтобы начать новый раунд')}
+function returnToCategoryPicker(){flashAwaitingNext=false;flashTransitioning=false;$('practiceArea').classList.remove('flash-session');stopTimedClock();timedSessionActive=false;timedMode=false;$('practiceArea').classList.add('hidden');$('flashCategoryPicker').classList.remove('hidden');renderPracticeCategoryCarousel();$('flashCategoryPicker').scrollIntoView({behavior:'smooth',block:'start'})}
+function closePracticeSession(){flashAwaitingNext=false;flashTransitioning=false;$('practiceArea').classList.remove('flash-session');stopTimedClock();timedSessionActive=false;$('practiceArea').classList.add('hidden');if(practiceMode==='flash')showFlashCategoryPicker()}
+
+function renderPractice(){
+  let area=$('practiceArea'),x=practiceItems[practiceIndex];
+  if(timedSessionActive&&Date.now()>=timedEndsAt){finishTimedPractice('time');return}
+  if(!x){if(timedSessionActive){finishTimedPractice('complete');return}area.innerHTML=`<div class="flash"><div style="font-size:38px">🎉</div><h2>Тренировка завершена!</h2><div class="sub">Правильных ответов: ${correctCount} из ${practiceItems.length}</div></div><button class="primary full" onclick="${practiceMode==='flash'?'beginFlashPractice()':`startPractice('${practiceMode}')`}">Повторить</button>${practiceMode==='flash'?'<button class="outline full" style="margin-top:9px" onclick="showFlashCategoryPicker()">Выбрать другую категорию</button>':''}`;return}
+  let count=practiceItems.length;
+  const closeButton=`<button class="muted-btn" onclick="closePracticeSession()">Закрыть</button>`;
+  const timerHeader=timedSessionActive?`<div class="timed-practice-head"><span class="timed-practice-label">НА ВРЕМЯ · ${esc(activePracticeCategory)}</span><span class="timer-pill" id="practiceTimer">${formatTimer(Math.max(0,(timedEndsAt-Date.now())/1000))}</span></div><div class="timer-progress"><span id="practiceTimerProgress" style="width:100%"></span></div>`:`<div class="progress"><span style="width:${practiceIndex/count*100}%"></span></div>`;
+  let head=`<div class="card-head"><span>Вопрос ${practiceIndex+1} из ${count}</span>${closeButton}</div>${timerHeader}`;
+  if(practiceMode==='flash'){
+    area.classList.add('flash-session');
+    const indexText=timedSessionActive?'НА ВРЕМЯ · '+esc(activePracticeCategory):'КАРТОЧКИ · '+esc(activePracticeCategory);
+    const timeText=timedSessionActive?`<div class="swipe-timer-wrap"><span class="timer-pill" id="practiceTimer">${formatTimer(Math.max(0,(timedEndsAt-Date.now())/1000))}</span><div class="timer-progress"><span id="practiceTimerProgress" style="width:100%"></span></div></div>`:'';
+    const progressPct=practiceIndex/practiceItems.length*100;
+    area.innerHTML=`<div class="swipe-session-head"><button class="glass-circle" type="button" onclick="closePracticeSession()" aria-label="Закрыть тренировку">‹</button><div class="swipe-session-title">${indexText}<span class="swipe-session-sub">${practiceIndex+1} / ${count}</span></div><button type="button" class="glass-circle" onclick="speakCurrentFlashWord()" aria-label="Произнести слово">♫</button></div>
+       <div class="swipe-progress"><span style="width:${progressPct}%"></span></div>${timeText}
+       <div class="swipe-deck" id="swipeDeck" data-drag="none"><div class="swipe-ambient"></div><div class="swipe-deck-back back-two"></div><div class="swipe-deck-back"></div>
+         <div class="swipe-edge left"><div class="edge-symbol">←<small>Не знаю</small></div></div>
+         <div class="swipe-edge right"><div class="edge-symbol">→<small>Знаю</small></div></div>
+         <div class="swipe-card" id="swipeCard" role="button" tabindex="0" aria-label="${esc(x.term)}. Смахни вправо, если знаешь, или влево, чтобы узнать перевод" onpointerdown="flashPointerDown(event)" onpointermove="flashPointerMove(event)" onpointerup="flashPointerUp(event)" onpointercancel="flashPointerCancel(event)" onkeydown="flashCardKeydown(event)">
+          <div class="swipe-card-speaker" aria-hidden="true">♫</div><div class="swipe-word">${esc(x.term)}</div>
+          <div class="swipe-answer"><div class="translation">${esc(x.translation)}</div>${x.transcription?`<div class="transcription">${esc(x.transcription)}</div>`:''}</div></div>
+       </div>
+       <div class="swipe-help" id="flashHelp">Вправо — знаю · Влево — покажи перевод</div>
+       <div class="swipe-actions" id="flashActions"><button type="button" class="swipe-action unknown" onclick="swipeFlash('unknown')">← Не знаю</button><button type="button" class="swipe-action known" onclick="swipeFlash('known')">Знаю →</button></div>
+       <button class="primary swipe-next hidden" id="flashNext" onclick="continueAfterReveal()">Следующее слово →</button>`;
+    if(timedSessionActive)updateTimedTimer();
+    return;
+  }
+  if(practiceMode==='typing'){area.innerHTML=head+`<div class="flash"><div class="flash-hint">НАПИШИ ПО-АНГЛИЙСКИ</div><div class="flash-word">${esc(x.translation)}</div><input id="typedAnswer" placeholder="Твой ответ" class="typed-answer" style="width:100%;padding:14px;border:1px solid var(--line);border-radius:var(--radius-control);text-align:center" autocapitalize="none"><button class="primary full" style="margin-top:12px" onclick="checkTyped()">Проверить</button><div id="typedResult" style="margin-top:12px"></div></div>`;return}
+  if(practiceMode==='audio'){area.innerHTML=head+`<div class="flash"><div class="flash-hint">ПРОСЛУШАЙ И ВСПОМНИ ПЕРЕВОД</div><button class="secondary" style="font-size:26px;padding:20px" onclick="speak('${esc(x.term).replace(/'/g,"\\'")}')">🔊</button><div class="sub">Нажми, чтобы прослушать слово</div><button class="secondary" style="margin-top:20px" onclick="flipped=!flipped;renderPractice()">${flipped?esc(x.translation):'Показать перевод'}</button></div>${flipped?`<div class="row2"><button class="outline" onclick="rateAnswer(false)">Не знал</button><button class="primary" onclick="rateAnswer(true)">Угадал</button></div>`:''}`;return}
+  let opts=[x,...db.words.filter(y=>y.id!==x.id).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);area.innerHTML=head+`<div class="flash" style="min-height:150px"><div class="flash-hint">ВЫБЕРИ ПРАВИЛЬНЫЙ ПЕРЕВОД</div><div class="flash-word">${esc(x.term)}</div></div>${opts.map(o=>`<button class="answer full" onclick="chooseAnswer('${o.id}','${x.id}',this)">${esc(o.translation)}</button>`).join('')}`
+}
+
+
+/* Right = learned, left = unfamiliar; unfamiliar reveals translation before advancing. */
+function speakCurrentFlashWord(){const x=practiceItems[practiceIndex];if(x)speak(x.term)}
+function rememberFlashAnswer(known){
+  const x=practiceItems[practiceIndex];if(!x)return;
+  if(known){x.correct=(x.correct||0)+1;x.level=Math.min(5,(x.level||0)+1);correctCount++}
+  else{x.level=Math.max(0,(x.level||0)-1)}
+  persist();
+}
+function swipeFlash(direction){
+  if(practiceMode!=='flash'||flashAwaitingNext||flashTransitioning||!practiceItems[practiceIndex])return;
+  if(timedSessionActive&&Date.now()>=timedEndsAt){finishTimedPractice('time');return}
+  const card=$('swipeCard'),deck=$('swipeDeck');if(!card)return;
+  flashTransitioning=true;
+  card.classList.remove('is-dragging');card.style.removeProperty('--swipe-x');card.style.removeProperty('--swipe-y');card.style.removeProperty('--swipe-rot');
+  if(deck)deck.dataset.drag=direction==='known'?'right':'left';
+  const known=direction==='known';rememberFlashAnswer(known);
+  if(navigator.vibrate)navigator.vibrate(known?9:[11,20,9]);
+  if(known){
+    card.classList.add('is-known');
+    setTimeout(()=>{
+      if(!$('swipeCard')||!flashTransitioning)return;
+      practiceIndex++;flashTransitioning=false;flipped=false;
+      renderPractice();
+    },355);
+  }else{
+    flashAwaitingNext=true;
+    card.classList.add('is-revealed');
+    $('flashHelp').textContent='Посмотри перевод и продолжай, когда будешь готов';
+    $('flashActions').classList.add('hidden');$('flashNext').classList.remove('hidden');
+    setTimeout(()=>{flashTransitioning=false},220);
+  }
+}
+function continueAfterReveal(){
+  if(!flashAwaitingNext||flashTransitioning)return;
+  if(timedSessionActive&&Date.now()>=timedEndsAt){finishTimedPractice('time');return}
+  flashAwaitingNext=false;practiceIndex++;flipped=false;
+  renderPractice();
+}
+function flashPointerDown(event){
+  if(event.pointerType==='mouse'&&event.button!==0)return;
+  if(flashAwaitingNext||flashTransitioning)return;
+  const card=$('swipeCard');if(!card)return;
+  flashDragState={id:event.pointerId,x:event.clientX,y:event.clientY,card};
+  try{card.setPointerCapture(event.pointerId)}catch(e){}
+}
+function flashPointerMove(event){
+  const st=flashDragState;if(!st||st.id!==event.pointerId||flashTransitioning)return;
+  const dx=event.clientX-st.x,dy=event.clientY-st.y;
+  const card=st.card,deck=$('swipeDeck');
+  if(Math.abs(dx)<4&&Math.abs(dy)<4)return;
+  card.classList.add('is-dragging');
+  card.style.setProperty('--swipe-x',Math.max(-210,Math.min(210,dx))+'px');
+  card.style.setProperty('--swipe-y',Math.max(-32,Math.min(32,dy*.19))+'px');
+  card.style.setProperty('--swipe-rot',Math.max(-16,Math.min(16,dx*.065))+'deg');
+  if(deck)deck.dataset.drag=Math.abs(dx)>25?(dx>0?'right':'left'):'none';
+}
+function flashPointerUp(event){
+  const st=flashDragState;if(!st||st.id!==event.pointerId)return;
+  flashDragState=null;try{if(st.card.hasPointerCapture(event.pointerId))st.card.releasePointerCapture(event.pointerId)}catch(e){}
+  const dx=event.clientX-st.x,dy=event.clientY-st.y;
+  if(Math.abs(dx)>75&&Math.abs(dx)>Math.abs(dy)*.9){swipeFlash(dx>0?'known':'unknown');return}
+  st.card.classList.remove('is-dragging');
+  for(const prop of ['--swipe-x','--swipe-y','--swipe-rot'])st.card.style.removeProperty(prop);
+  if($('swipeDeck'))$('swipeDeck').dataset.drag='none';
+}
+function flashPointerCancel(event){if(!flashDragState)return;const st=flashDragState;flashDragState=null;
+ st.card.classList.remove('is-dragging');for(const prop of ['--swipe-x','--swipe-y','--swipe-rot'])st.card.style.removeProperty(prop);
+ if($('swipeDeck'))$('swipeDeck').dataset.drag='none';}
+function flashCardKeydown(e){if(e.key==='ArrowRight'){e.preventDefault();swipeFlash('known')}
+ else if(e.key==='ArrowLeft'||e.key==='Enter'){e.preventDefault();swipeFlash('unknown')}}
+
+function rateAnswer(ok){if(timedSessionActive&&Date.now()>=timedEndsAt){finishTimedPractice('time');return}let x=practiceItems[practiceIndex];if(ok){x.correct=(x.correct||0)+1;x.level=Math.min(5,(x.level||0)+1);correctCount++}else{x.level=Math.max(0,(x.level||0)-1)}persist();practiceIndex++;flipped=false;if(timedSessionActive&&practiceIndex>=practiceItems.length){finishTimedPractice('complete');return}renderPractice()}function chooseAnswer(id,correct,btn){let buttons=[...$('practiceArea').querySelectorAll('.answer')];buttons.forEach(b=>b.disabled=true);if(id===correct){btn.classList.add('correct');correctCount++;let x=db.words.find(x=>x.id===correct);x.correct=(x.correct||0)+1;x.level=Math.min(5,(x.level||0)+1)}else{btn.classList.add('wrong');let right=db.words.find(x=>x.id===correct);right.level=Math.max(0,(right.level||0)-1);buttons.find(b=>b.textContent===right.translation)?.classList.add('correct')}persist();setTimeout(()=>{practiceIndex++;renderPractice()},850)}function checkTyped(){let x=practiceItems[practiceIndex],v=$('typedAnswer').value.trim().toLowerCase();let ok=v===x.term.toLowerCase();$('typedResult').innerHTML=ok?'<span style="color:var(--green);font-weight:700">Верно! Отличная работа.</span>':`<span style="color:#c45b5b">Правильный ответ: <b>${esc(x.term)}</b></span>`;if(ok){x.correct=(x.correct||0)+1;x.level=Math.min(5,(x.level||0)+1);correctCount++}else{x.level=Math.max(0,(x.level||0)-1)}persist();setTimeout(()=>{practiceIndex++;renderPractice()},1100)}
+function exportData(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='vocabulary-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);toast('Резервная копия подготовлена')}function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!Array.isArray(d.words)||!Array.isArray(d.phrases))throw Error();if(!confirm('Импортировать данные? Текущий словарь будет заменён.'))return;db=d;persist();toast('Словарь восстановлен')}catch(err){toast('Не удалось прочитать файл резервной копии')}e.target.value=''};r.readAsText(f)}function clearData(){if(!confirm('Точно удалить все слова и фразы? Сначала сделай экспорт.'))return;db={words:[],phrases:[]};persist();toast('Словарь очищен')}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&timedSessionActive)updateTimedTimer()});
+function renderDictionaryInit(){renderDictionary()}renderAll();if('serviceWorker'in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script></body></html>
