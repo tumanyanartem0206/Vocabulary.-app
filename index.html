@@ -37,6 +37,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 20px;
+  touch-action: manipulation;
   -webkit-text-size-adjust: 100%;
 }
 body {
@@ -53,7 +54,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 button, input, select, textarea { font: inherit; }
-button { cursor: pointer; border: 0; -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; border: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
   outline: 3px solid rgba(71, 120, 232, .24);
   outline-offset: 2px;
@@ -1125,6 +1126,80 @@ body::before {content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
   .swipe-card,.swipe-answer,.swipe-progress>span {transition-duration:.01ms!important}
 }
 
+
+/* 0.8 iOS inspired single-scene flashcards and glass slider */
+.nav{padding:7px;border-radius:35px;background:rgba(41,37,35,.47)!important;border:1px solid rgba(255,255,255,.21)!important;box-shadow:0 14px 38px rgba(0,0,0,.37),inset 0 1px rgba(255,255,255,.14)!important;backdrop-filter:blur(36px) saturate(165%)!important;-webkit-backdrop-filter:blur(36px) saturate(165%)!important;}
+.nav-inner{isolation:isolate;}
+.nav-slider{position:absolute;z-index:-1;left:0;top:0;height:100%;width:20%;border-radius:27px;background:linear-gradient(155deg,rgba(255,247,233,.23),rgba(178,164,147,.14) 60%,rgba(255,209,155,.1));border:1px solid rgba(255,238,210,.22);box-shadow:inset 0 1px rgba(255,255,255,.33),0 3px 12px rgba(0,0,0,.17);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .57s cubic-bezier(.2,.86,.2,1),width .35s ease;pointer-events:none;}
+.nav button.active{background:transparent!important;box-shadow:none!important;color:#ffe3bb!important;}
+.nav button{z-index:1;transition:color .36s ease!important;}
+.suggestion-row{animation:none!important;transition:opacity .18s ease,transform .22s ease;}
+.suggestion-row.is-replacing{opacity:0;transform:translateX(-10px);}
+.suggestion-row.is-appearing{animation:rowSoftIn .4s cubic-bezier(.17,.8,.2,1) both!important;}
+@keyframes rowSoftIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* Remove the original page's subdivisions while the focus view is open. */
+#practice.flash-focus{position:fixed!important;z-index:12;inset:0;max-width:none!important;margin:0!important;padding:0!important;overflow:hidden!important;background:#100b09;display:block!important;animation:none!important;}
+#practice.flash-focus > :not(#flashCategoryPicker):not(#practiceArea){display:none!important;}
+body:has(#practice.flash-focus) .top,body:has(#practice.flash-focus) .nav,body:has(#practice.flash-focus) .fab{display:none!important;}
+#practice.flash-focus #flashCategoryPicker:not(.hidden),#practice.flash-focus #practiceArea:not(.hidden){position:absolute;inset:0;display:block!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;overflow:hidden;}
+#practice.flash-focus #flashCategoryPicker.hidden,#practice.flash-focus #practiceArea.hidden{display:none!important;}
+.focus-scene{position:relative;width:100%;height:100%;height:100dvh;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 51% 53%,#482619 0%,#24130f 31%,#100b0a 73%);color:#fff0d9;}
+.focus-scene::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 55% 35% at 50% 58%,rgba(243,142,45,.11),transparent 77%);}
+.focus-heading{position:absolute;z-index:11;top:calc(env(safe-area-inset-top) + 18px);left:18px;right:18px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.focus-label{text-align:center;display:flex;flex-direction:column;gap:4px;min-width:0;flex:1;}
+.focus-label strong{font-size:18px;font-weight:650;letter-spacing:-.4px;}
+.focus-label span{font-size:12px;color:#bba18d;}
+.focus-scene .picker-back{width:44px;height:44px;flex:0 0 44px;background:rgba(255,245,224,.06);border-radius:50%;font-size:24px;}
+.focus-scene .carousel-stage,.focus-scene .carousel-stage.timer-mode{position:absolute;inset:0!important;width:100%;height:100%!important;border:0!important;border-radius:0!important;overflow:hidden;background:transparent!important;box-shadow:none!important;perspective:1250px;touch-action:pan-y;}
+.focus-scene .carousel-stage.timer-mode{touch-action:none;}
+.focus-scene .carousel-stage::before,.focus-scene .carousel-stage::after{display:none!important;}
+.focus-scene .category-card{position:absolute;left:50%;top:calc(50% - 150px)!important;width:min(245px,57vw)!important;height:303px!important;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:25px 13px;color:#ffe6af;border:1.5px solid rgba(255,205,114,.54);border-radius:76px!important;background:linear-gradient(150deg,rgba(159,111,58,.45),rgba(91,56,33,.64) 55%,rgba(75,48,28,.72));box-shadow:0 0 24px rgba(242,149,44,.13),inset 0 1px 0 rgba(255,236,183,.32);transform-origin:50% 50%;transform:translate3d(calc(-50% + var(--x,0px) + var(--drag-x,0px)),var(--drag-y,0px),calc(var(--z,0px) + var(--drag-z,0px))) rotateY(var(--ry,0deg)) scale(var(--scale,1)) scale(var(--drag-scale,1));transition:transform .6s cubic-bezier(.22,.85,.25,1),opacity .46s ease,filter .46s ease,box-shadow .32s ease!important;}
+.focus-scene .category-card::after{display:none;}
+.focus-scene .category-card::before{background:linear-gradient(128deg,rgba(255,237,188,.15),transparent 42%,rgba(255,204,142,.06));}
+.focus-scene .category-card.is-center{--z:65px;box-shadow:0 0 22px rgba(255,198,94,.4),0 0 75px rgba(254,153,31,.19),inset 0 1px rgba(255,244,198,.34);}
+.focus-scene .category-card.is-prev{--x:-160px;--ry:28deg;--scale:.72;opacity:.43;}
+.focus-scene .category-card.is-next{--x:160px;--ry:-28deg;--scale:.72;opacity:.43;}
+.focus-scene .category-card.is-far-prev,.focus-scene .category-card.is-far-next{opacity:0!important;}
+.focus-scene .category-center-icon{display:block;font-size:51px;line-height:1;filter:drop-shadow(0 0 15px rgba(255,200,104,.37));}
+.focus-scene .category-name{font-size:clamp(20px,5.8vw,29px);text-align:center;line-height:1.15;min-height:0;margin:0;color:#ffdeaa;letter-spacing:-.5px;text-shadow:0 2px 20px rgba(255,181,89,.2);}
+.focus-scene .category-count{display:block;margin:0;padding:9px 12px;font-size:13px;color:#ffe0b6;border:1px solid rgba(255,219,162,.14);border-radius:20px;background:rgba(255,220,164,.09);}
+.focus-scene .category-down{display:none;font-size:35px;color:#ffe6ab;font-weight:700;line-height:1;}
+.focus-scene.is-timed .category-down{display:block;}
+.focus-scene .focus-bottom{position:absolute;z-index:10;left:18px;right:18px;bottom:calc(env(safe-area-inset-bottom) + 26px);display:flex;flex-direction:column;gap:9px;align-items:center;transition:opacity .3s ease;}
+.focus-scene .carousel-controls{display:flex;margin:0 0 1px;gap:18px;}
+.focus-scene .carousel-arrow{height:35px;width:35px;}
+.focus-scene .focus-category-name{font-size:15px;font-weight:750;text-align:center;}
+.focus-scene .focus-category-count{font-size:11px;color:#bda28a;text-align:center;}
+.focus-scene .focus-hint{font-size:12px;line-height:1.3;text-align:center;color:#d4b590;max-width:320px;min-height:15px;}
+.focus-scene .selection-actions{display:grid;grid-template-columns:1fr 1fr;width:min(380px,100%);gap:10px;}
+.focus-scene .selection-actions button{min-height:44px;border-radius:22px;}
+.focus-scene .timed-options{width:min(360px,100%);margin:0;animation:glassRise .3s ease both;}
+.focus-scene .duration-choices{gap:8px;}
+.focus-scene .duration-choice{min-height:43px;border-radius:20px;}
+.focus-scene .timed-cancel{padding:7px;margin:4px auto 0;}
+.focus-scene.is-timed .carousel-controls,.focus-scene.is-timed .focus-category-name,.focus-scene.is-timed .focus-category-count,.focus-scene.is-timed .selection-actions{display:none!important;}
+.focus-scene.is-timed .category-card{top:calc(44% - 162px)!important;}
+.focus-scene.is-timed .category-card.is-center{height:300px!important;}
+.focus-scene .carousel-stage.timer-mode .activation-drive{display:flex;position:absolute;bottom:calc(env(safe-area-inset-bottom) + 146px);height:82px;width:min(350px,90vw);left:50%;z-index:8;opacity:1;}
+.focus-scene .carousel-stage.timer-mode .drive-slot{height:16px;}
+.focus-scene .carousel-stage.timer-mode .category-card.is-grabbed{transition:none!important;}
+.focus-scene .carousel-stage.timer-mode .category-card.is-launching{animation:cardInsertV08 .5s cubic-bezier(.23,.85,.24,1) forwards!important;}
+@keyframes cardInsertV08{to{transform:translate3d(-50%,min(34vh,280px),90px) scale(.32) rotateX(62deg);opacity:0;filter:blur(9px);}}
+#practice.flash-focus #practiceArea.flash-session{display:block!important;background:radial-gradient(ellipse 75% 75% at 50% 48%,#392118,#120c0b 75%)!important;color:#fff0d8;}
+#practice.flash-focus .swipe-session-head{position:absolute;z-index:8;top:calc(env(safe-area-inset-top) + 13px);left:20px;right:20px;}
+#practice.flash-focus .swipe-progress{position:absolute;top:calc(env(safe-area-inset-top) + 75px);left:9%;right:9%;margin:0;}
+#practice.flash-focus .swipe-timer-wrap{position:absolute;z-index:8;top:calc(env(safe-area-inset-top) + 93px);left:0;right:0;}
+#practice.flash-focus .swipe-deck{position:absolute;top:calc(50% - 172px);left:0;right:0;min-height:370px;margin:0;touch-action:none;}
+#practice.flash-focus .swipe-card{width:min(300px,76vw);height:min(43vh,350px);min-height:240px;}
+#practice.flash-focus .swipe-deck-back{width:min(300px,76vw);height:min(43vh,350px);min-height:240px;}
+#practice.flash-focus .swipe-help{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 100px);left:0;right:0;margin:0;}
+#practice.flash-focus .swipe-actions,#practice.flash-focus #flashNext{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 27px);left:20px;right:20px;margin:0;}
+#practice.flash-focus .swipe-actions{display:grid;grid-template-columns:1fr 1fr;}
+#practice.flash-focus .swipe-actions.hidden,#practice.flash-focus #flashNext.hidden{display:none!important;}
+#practice.flash-focus .timer-result{padding:calc(env(safe-area-inset-top) + 95px) 22px 0;}
+@media(max-height:680px){.focus-scene .category-card{top:calc(44% - 125px)!important;height:250px!important;}.focus-scene.is-timed .category-card{top:calc(39% - 125px)!important;}.focus-scene .category-center-icon{font-size:37px;}.focus-scene .carousel-stage.timer-mode .activation-drive{bottom:calc(env(safe-area-inset-bottom) + 122px)}.focus-scene .focus-bottom{bottom:calc(env(safe-area-inset-bottom) + 13px)}#practice.flash-focus .swipe-deck{top:calc(49% - 155px)}}
+@media(prefers-reduced-motion:reduce){.nav-slider,.focus-scene .category-card{transition:none!important}}
+
 </style></head>
 <body>
 <div class="app">
@@ -1137,16 +1212,18 @@ body::before {content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
 <section id="dictionary" class="page"><div class="section-title">Словарь</div><div class="search"><span>⌕</span><input id="wordSearch" placeholder="Поиск слова или перевода..." oninput="renderDictionary()"></div><div class="filters" id="categoryFilters"></div><div id="categorySuggestions"></div><div class="card" style="padding:5px 16px"><div class="card-head" style="padding:12px 0 4px;margin:0"><span id="dictCount">Все слова</span><button class="link" onclick="toggleSort()" id="sortLabel">A–Z ↕</button></div><div id="wordList"></div></div></section>
 <section id="phrases" class="page"><div class="section-title">Фразы и выражения</div><div class="search"><span>⌕</span><input id="phraseSearch" placeholder="Найти фразу..." oninput="renderPhrases()"></div><div id="phraseList" class="card" style="padding:5px 16px"></div></section>
 <section id="practice" class="page"><div class="section-title">Тренировка</div><div class="card practice-intro"><div class="card-head"><span>Твоя подготовка</span><span style="color:var(--green);font-size:12px">● В своём темпе</span></div><div style="display:flex;align-items:center;gap:15px"><div style="font-size:35px">🧠</div><div><b>Закрепляй знания</b><div class="sub" style="margin-top:4px">Выбери режим и потренируй слова из своего словаря.</div></div></div></div><div class="mode-grid"><button class="mode" onclick="startPractice('flash')"><div class="mi">🃏</div><b>Карточки</b><small>Вспоминай перевод</small></button><button class="mode" onclick="startPractice('choice')"><div class="mi">☑️</div><b>Выбор ответа</b><small>Проверь себя</small></button><button class="mode" onclick="startPractice('typing')"><div class="mi">⌨️</div><b>Написание</b><small>Вспомни английское слово</small></button><button class="mode" onclick="startPractice('audio')"><div class="mi">🔊</div><b>На слух</b><small>Узнай слово по звучанию</small></button></div><div id="flashCategoryPicker" class="flash-category-picker hidden"></div><div id="practiceArea" class="card hidden" style="margin-top:14px"></div><div class="card practice-knowledge" style="margin-top:14px"><div class="card-head"><span>Мои знания</span></div><div class="sub" id="knowledgeText">Добавь первые слова, чтобы увидеть статистику.</div></div></section>
-<section id="settings" class="page"><div class="section-title">Настройки</div><div class="card"><div class="card-head">Мои данные</div><div class="sub">Словарь хранится на этом устройстве. Регулярно сохраняй резервную копию.</div><div class="setting-row"><div><b>Экспорт словаря</b><div class="sub">Скачать файл JSON</div></div><button class="secondary" onclick="exportData()">Экспорт</button></div><div class="setting-row"><div><b>Импорт словаря</b><div class="sub">Восстановить из файла</div></div><button class="secondary" onclick="document.getElementById('importFile').click()">Импорт</button><input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)"></div><div class="setting-row"><div><b>Очистить словарь</b><div class="sub">Удалить все записи</div></div><button class="outline" onclick="clearData()">Очистить</button></div></div><div class="card"><div class="card-head">О Vocabulary</div><div class="sub">Версия 0.6 · Персональный английский словарь</div><div class="sub" style="margin-top:9px">Первый прототип. Данные сохраняются локально в браузере. Не очищай данные сайта без предварительного экспорта.</div></div></section>
+<section id="settings" class="page"><div class="section-title">Настройки</div><div class="card"><div class="card-head">Мои данные</div><div class="sub">Словарь хранится на этом устройстве. Регулярно сохраняй резервную копию.</div><div class="setting-row"><div><b>Экспорт словаря</b><div class="sub">Скачать файл JSON</div></div><button class="secondary" onclick="exportData()">Экспорт</button></div><div class="setting-row"><div><b>Импорт словаря</b><div class="sub">Восстановить из файла</div></div><button class="secondary" onclick="document.getElementById('importFile').click()">Импорт</button><input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)"></div><div class="setting-row"><div><b>Очистить словарь</b><div class="sub">Удалить все записи</div></div><button class="outline" onclick="clearData()">Очистить</button></div></div><div class="card"><div class="card-head">О Vocabulary</div><div class="sub">Версия 0.8 · Персональный английский словарь</div><div class="sub" style="margin-top:9px">Первый прототип. Данные сохраняются локально в браузере. Не очищай данные сайта без предварительного экспорта.</div></div></section>
 </div>
 <button class="fab" id="fab" onclick="openForm('word')">＋</button>
-<nav class="nav"><div class="nav-inner"><button class="active" data-page="home" onclick="showPage('home')"><span class="ni">⌂</span>Главная</button><button data-page="dictionary" onclick="showPage('dictionary')"><span class="ni">▤</span>Словарь</button><button data-page="phrases" onclick="showPage('phrases')"><span class="ni">❞</span>Фразы</button><button data-page="practice" onclick="showPage('practice')"><span class="ni">◉</span>Учить</button><button data-page="settings" onclick="showPage('settings')"><span class="ni">⚙</span>Ещё</button></div></nav>
+<nav class="nav"><div class="nav-inner"><span class="nav-slider" aria-hidden="true"></span><button class="active" data-page="home" onclick="showPage('home')"><span class="ni">⌂</span>Главная</button><button data-page="dictionary" onclick="showPage('dictionary')"><span class="ni">▤</span>Словарь</button><button data-page="phrases" onclick="showPage('phrases')"><span class="ni">❞</span>Фразы</button><button data-page="practice" onclick="showPage('practice')"><span class="ni">◉</span>Учить</button><button data-page="settings" onclick="showPage('settings')"><span class="ni">⚙</span>Ещё</button></div></nav>
 <div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="sheet"><div class="sheet-top"><h2 id="formTitle">Новое слово</h2><button class="close" onclick="closeModal()">×</button></div><form id="entryForm" onsubmit="saveEntry(event)"><input type="hidden" id="entryType"><input type="hidden" id="entryId"><div class="field"><label id="termLabel">АНГЛИЙСКОЕ СЛОВО</label><input id="term" required placeholder="Например, nephew" autocomplete="off"></div><div class="field"><label>ПЕРЕВОД</label><input id="translation" required placeholder="Например, племянник"></div><div class="row2"><div class="field"><label>ТРАНСКРИПЦИЯ</label><input id="transcription" placeholder="/ˈnef.juː/"></div><div class="field"><label>КАТЕГОРИЯ</label><select id="category"></select></div></div><div class="transcription-note" id="transcriptionStatus">Транскрипция подставится автоматически после ввода слова.</div><div class="field"><label>ПРИМЕР ИСПОЛЬЗОВАНИЯ</label><textarea id="example" placeholder="My nephew is five years old."></textarea></div><div class="form-actions"><button type="button" class="outline" onclick="closeModal()">Отмена</button><button type="submit" class="primary">Сохранить</button></div><div style="margin-top:12px"><button type="button" class="secondary full" onclick="checkWord()">Проверить английское слово ↗</button><div class="sub" id="checkResult" style="margin:8px 3px 0"></div></div></form></div></div>
 <div class="modal" id="detailModal" onclick="if(event.target===this)closeDetail()"><div class="sheet"><div class="sheet-top"><h2>Карточка слова</h2><button class="close" onclick="closeDetail()">×</button></div><div id="detailContent"></div></div></div><div class="toast" id="toast"></div>
 <script>
 const CATS=['Семья и родственники','Дом и интерьер','Еда и рестораны','Путешествия','Общение','Работа и профессия','Эмоции и чувства','Природа','Здоровье','Другое'];let db=JSON.parse(localStorage.getItem('vocabulary-db')||'{"words":[],"phrases":[]}');if(!db.words)db={words:[],phrases:[]};let sortAsc=true,activeCat='Все',practiceItems=[],practiceIndex=0,practiceMode='flash',flipped=false,correctCount=0;let selectedPracticeCategory=0,activePracticeCategory='Все слова',carouselPointerStart=null,carouselDragged=false;let flashAwaitingNext=false,flashTransitioning=false,flashDragState=null,timedLaunching=false;let timedMode=false,timedDuration=60,activeTimedDuration=60,timedSessionActive=false,timedEndsAt=0,timedInterval=null,lastTimerSecond=null,timedDragState=null,timedDragConsumed=false;
 const $=id=>document.getElementById(id);function persist(){localStorage.setItem('vocabulary-db',JSON.stringify(db));renderAll()}function toast(s){$('toast').textContent=s;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
-function showPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(p).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));$('fab').style.display=['home','dictionary','phrases'].includes(p)?'block':'none';if(p==='dictionary')renderDictionary();if(p==='phrases')renderPhrases();if(p==='home')renderHome();if(p!=='practice')$('practice').classList.remove('flash-focus')}
+function updateNavSlider(){const inner=document.querySelector('.nav-inner'),active=inner?.querySelector('button.active'),slider=inner?.querySelector('.nav-slider');if(!active||!slider)return;slider.style.transform=`translate3d(${active.offsetLeft}px,0,0)`;slider.style.width=active.offsetWidth+'px';}
+window.addEventListener('resize',updateNavSlider,{passive:true});window.addEventListener('load',()=>requestAnimationFrame(updateNavSlider));
+function showPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(p).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));$('fab').style.display=['home','dictionary','phrases'].includes(p)?'block':'none';if(p==='dictionary')renderDictionary();if(p==='phrases')renderPhrases();if(p==='home')renderHome();if(p!=='practice')$('practice').classList.remove('flash-focus');requestAnimationFrame(updateNavSlider)}
 let transcriptionRequest=0;
 function openForm(type,id=''){let e=id?[...db.words,...db.phrases].find(x=>x.id===id):null;$('entryType').value=type;$('entryId').value=id;$('formTitle').textContent=(e?'Редактировать':type==='word'?'Новое слово':'Новая фраза');$('termLabel').textContent=type==='word'?'АНГЛИЙСКОЕ СЛОВО':'АНГЛИЙСКАЯ ФРАЗА';$('term').placeholder=type==='word'?'Например, nephew':'Например, by the way';$('term').value=e?.term||'';$('translation').value=e?.translation||'';$('transcription').value=e?.transcription||'';$('transcriptionStatus').textContent=e?.transcription?'Транскрипция сохранена. Её можно изменить вручную.':'Транскрипция подставится автоматически после ввода слова.';$('example').value=e?.example||'';$('checkResult').textContent='';$('category').innerHTML=CATS.map(c=>`<option ${e?.category===c?'selected':''}>${esc(c)}</option>`).join('');$('modal').classList.add('show');if(type==='word')$('term').onblur=fetchTranscription}
 function closeModal(){$('modal').classList.remove('show')}
@@ -1167,8 +1244,61 @@ const CATEGORY_SUGGESTIONS={
 'Природа':[['wildlife','дикая природа'],['shore','берег'],['cliff','утёс'],['meadow','луг'],['branch','ветка'],['bark','кора дерева'],['stream','ручей'],['wildflower','полевой цветок']],
 'Здоровье':[['symptom','симптом'],['prescription','рецепт'],['appointment','приём / запись'],['recovery','восстановление'],['sore throat','боль в горле'],['dizzy','испытывающий головокружение'],['treatment','лечение'],['check-up','медицинский осмотр']],
 'Другое':[['useful','полезный'],['although','хотя'],['unless','если не'],['nevertheless','тем не менее'],['to improve','улучшать'],['to avoid','избегать'],['to achieve','достигать'],['to notice','замечать']]};
-function renderCategorySuggestions(){let host=$('categorySuggestions');if(!host)return;if(activeCat==='Все'){host.innerHTML='';return}let known=new Set(db.words.map(x=>x.term.toLowerCase()));let list=(CATEGORY_SUGGESTIONS[activeCat]||[]).filter(x=>!known.has(x[0].toLowerCase())).slice(0,5);if(!list.length){host.innerHTML='<div class="suggestions"><b>Отлично!</b><div class="sub" style="margin-top:5px">Все предложенные слова этой подборки уже в твоём словаре.</div></div>';return}host.innerHTML=`<div class="suggestions"><div class="card-head" style="margin-bottom:5px"><span>✨ Можешь добавить</span><span class="sub">${esc(activeCat)}</span></div><div class="sub" style="margin-bottom:8px">Идеи слов для этой категории</div>${list.map((x,i)=>`<div class="suggestion-row"><div class="suggestion-main"><div class="suggestion-word">${esc(x[0])}</div><div class="suggestion-translation">${esc(x[1])}</div></div><button class="suggestion-add" onclick="addSuggestedWord('${esc(x[0])}','${esc(x[1])}','${esc(activeCat)}')">＋ Добавить</button></div>`).join('')}</div>`}
-async function addSuggestedWord(term,translation,category){if(db.words.some(x=>x.term.toLowerCase()===term.toLowerCase()))return toast('Это слово уже есть в словаре');let item={id:uid(),term,translation,transcription:'',category,example:'',created:Date.now(),level:0,correct:0};db.words.push(item);persist();toast('Добавлено: '+term);try{let r=await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/'+encodeURIComponent(term));if(r.ok){let d=await r.json(),p=(d[0]?.phonetics||[]).find(x=>x.text);if(p?.text){item.transcription=p.text;persist()}}}catch(e){/* keep the word; transcription can be added later */}}function toggleSort(){sortAsc=!sortAsc;renderDictionary()}
+
+/* Curated category vocabulary extension. Suggestions never enter the dictionary without a tap. */
+Object.entries({"Семья и родственники": [["mother-in-law", "свекровь / тёща"], ["father-in-law", "свёкор / тесть"], ["brother-in-law", "шурин / деверь / зять"], ["sister-in-law", "невестка / золовка / свояченица"], ["stepmother", "мачеха"], ["stepfather", "отчим"], ["stepsister", "сводная сестра"], ["stepbrother", "сводный брат"], ["half-sister", "сестра по одному из родителей"], ["half-brother", "брат по одному из родителей"], ["grandparents", "бабушка и дедушка"], ["grandmother", "бабушка"], ["grandfather", "дедушка"], ["great-grandmother", "прабабушка"], ["great-grandfather", "прадедушка"], ["nephew", "племянник"], ["toddler", "малыш"], ["newborn", "новорождённый"], ["twins", "близнецы"], ["fiancé", "жених"], ["fiancée", "невеста"], ["spouse", "супруг / супруга"], ["ancestor", "предок"], ["descendant", "потомок"], ["godmother", "крёстная мать"], ["godfather", "крёстный отец"], ["engaged", "помолвленный"], ["divorced", "разведённый"]], "Дом и интерьер": [["armchair", "кресло"], ["cushion", "диванная подушка"], ["pillow", "подушка"], ["blanket", "одеяло"], ["duvet", "пуховое одеяло"], ["mattress", "матрас"], ["headboard", "изголовье кровати"], ["nightstand", "прикроватная тумбочка"], ["countertop", "столешница"], ["sink", "раковина"], ["faucet", "кран"], ["dishwasher", "посудомоечная машина"], ["oven", "духовка"], ["stove", "плита"], ["laundry", "стирка / бельё"], ["balcony", "балкон"], ["terrace", "терраса"], ["staircase", "лестница"], ["railing", "перила"], ["tiles", "плитка"], ["carpet", "ковёр"], ["mirror", "зеркало"], ["storage", "хранение"], ["lighting", "освещение"], ["flooring", "напольное покрытие"]], "Еда и рестораны": [["starter", "закуска"], ["beverage", "напиток"], ["sparkling water", "газированная вода"], ["still water", "негазированная вода"], ["menu", "меню"], ["waiter", "официант"], ["waitress", "официантка"], ["tip", "чаевые"], ["receipt", "чек"], ["service charge", "плата за обслуживание"], ["allergy", "аллергия"], ["vegetarian", "вегетарианский"], ["vegan", "веганский"], ["dairy", "молочные продукты"], ["spicy", "острый"], ["mild", "неострый"], ["grilled", "приготовленный на гриле"], ["roasted", "запечённый"], ["steamed", "приготовленный на пару"], ["fried", "жареный"], ["leftovers", "остатки еды"], ["takeaway", "еда навынос"], ["portion", "порция"], ["topping", "добавка / топпинг"]], "Путешествия": [["passport", "паспорт"], ["visa", "виза"], ["customs", "таможня"], ["security check", "досмотр"], ["layover", "пересадка"], ["connection", "стыковочный рейс"], ["flight delay", "задержка рейса"], ["cancellation", "отмена"], ["gate", "выход на посадку"], ["baggage claim", "выдача багажа"], ["aisle seat", "место у прохода"], ["window seat", "место у окна"], ["check-in", "регистрация"], ["check-out", "выезд из отеля"], ["booking", "бронирование"], ["hostel", "хостел"], ["destination", "место назначения"], ["landmark", "достопримечательность"], ["currency", "валюта"], ["exchange rate", "обменный курс"], ["tour guide", "экскурсовод"], ["souvenir", "сувенир"], ["platform", "платформа"], ["timetable", "расписание"]], "Общение": [["anyway", "в любом случае"], ["however", "однако"], ["therefore", "поэтому"], ["in addition", "кроме того"], ["for instance", "например"], ["in other words", "другими словами"], ["to be honest", "честно говоря"], ["as far as I know", "насколько я знаю"], ["on the other hand", "с другой стороны"], ["in fact", "на самом деле"], ["to agree", "соглашаться"], ["to disagree", "не соглашаться"], ["to mention", "упоминать"], ["to explain", "объяснять"], ["to clarify", "уточнять"], ["to interrupt", "перебивать"], ["to apologize", "извиняться"], ["to suggest", "предлагать"], ["to complain", "жаловаться"], ["to persuade", "убеждать"], ["to hesitate", "колебаться"], ["to insist", "настаивать"], ["to reply", "отвечать"], ["to assume", "предполагать"]], "Работа и профессия": [["salary", "зарплата"], ["income", "доход"], ["promotion", "повышение"], ["vacancy", "вакансия"], ["interview", "собеседование"], ["resume", "резюме"], ["contract", "договор"], ["proposal", "предложение"], ["estimate", "смета / оценка"], ["budget", "бюджет"], ["milestone", "этап проекта"], ["deliverable", "результат работы"], ["approval", "согласование"], ["revision", "правка"], ["draft", "черновик"], ["blueprint", "чертёж"], ["floor plan", "план этажа"], ["site plan", "генеральный план"], ["facade", "фасад"], ["section", "разрез"], ["elevation", "вид фасада"], ["dimensions", "размеры"], ["construction", "строительство"], ["supplier", "поставщик"]], "Эмоции и чувства": [["excited", "взволнованный / воодушевлённый"], ["nervous", "нервничающий"], ["curious", "любопытный"], ["embarrassed", "смущённый"], ["jealous", "ревнующий"], ["proud", "гордый"], ["ashamed", "испытывающий стыд"], ["lonely", "одинокий"], ["hopeful", "полный надежды"], ["pessimistic", "пессимистичный"], ["optimistic", "оптимистичный"], ["surprised", "удивлённый"], ["shocked", "потрясённый"], ["annoyed", "раздражённый"], ["furious", "в ярости"], ["calm", "спокойный"], ["peaceful", "умиротворённый"], ["stressed", "напряжённый"], ["exhausted", "истощённый"], ["motivated", "мотивированный"], ["inspired", "вдохновлённый"], ["bored", "скучающий"], ["confused", "растерянный"], ["satisfied", "довольный"]], "Природа": [["forest", "лес"], ["valley", "долина"], ["mountain", "гора"], ["hill", "холм"], ["riverbank", "берег реки"], ["waterfall", "водопад"], ["lake", "озеро"], ["pond", "пруд"], ["wetland", "водно-болотное угодье"], ["marsh", "болото"], ["desert", "пустыня"], ["glacier", "ледник"], ["coast", "побережье"], ["island", "остров"], ["peninsula", "полуостров"], ["canyon", "каньон"], ["cave", "пещера"], ["trail", "тропа"], ["footpath", "пешеходная дорожка"], ["landscape", "ландшафт"], ["ecosystem", "экосистема"], ["habitat", "среда обитания"], ["climate", "климат"], ["biodiversity", "биоразнообразие"]], "Здоровье": [["headache", "головная боль"], ["fever", "жар / высокая температура"], ["cough", "кашель"], ["cold", "простуда"], ["flu", "грипп"], ["nausea", "тошнота"], ["fatigue", "усталость"], ["injury", "травма"], ["bruise", "синяк"], ["sprain", "растяжение связок"], ["swelling", "отёк"], ["inflammation", "воспаление"], ["painkiller", "обезболивающее"], ["dosage", "дозировка"], ["side effect", "побочный эффект"], ["pharmacy", "аптека"], ["vaccination", "вакцинация"], ["blood pressure", "кровяное давление"], ["heartbeat", "сердцебиение"], ["breathing", "дыхание"], ["nutrition", "питание"], ["hydration", "водный баланс"], ["wellbeing", "благополучие"], ["sleep quality", "качество сна"]], "Другое": [["despite", "несмотря на"], ["whereas", "тогда как"], ["otherwise", "иначе"], ["meanwhile", "тем временем"], ["eventually", "в конце концов"], ["recently", "недавно"], ["frequently", "часто"], ["rarely", "редко"], ["certainly", "безусловно"], ["probably", "вероятно"], ["perhaps", "возможно"], ["approximately", "приблизительно"], ["accurate", "точный"], ["reliable", "надёжный"], ["efficient", "эффективный"], ["convenient", "удобный"], ["challenging", "сложный"], ["reasonable", "разумный"], ["significant", "значительный"], ["temporary", "временный"], ["permanent", "постоянный"], ["available", "доступный"], ["necessary", "необходимый"], ["sufficient", "достаточный"]]}).forEach(([category,entries])=>{const seen=new Set((CATEGORY_SUGGESTIONS[category]||[]).map(x=>x[0].toLowerCase()));for(const entry of entries){if(!seen.has(entry[0].toLowerCase()))CATEGORY_SUGGESTIONS[category].push(entry);seen.add(entry[0].toLowerCase())}});
+function suggestionCandidates(cat){
+  const known=new Set(db.words.map(x=>x.term.trim().toLowerCase()));
+  return (CATEGORY_SUGGESTIONS[cat]||[]).filter(x=>!known.has(x[0].toLowerCase()));
+}
+function suggestionRow(x){return `<div class="suggestion-row" data-suggestion="${esc(x[0])}"><div class="suggestion-main"><div class="suggestion-word">${esc(x[0])}</div><div class="suggestion-translation">${esc(x[1])}</div></div><button class="suggestion-add" type="button">＋ Добавить</button></div>`;}
+function renderCategorySuggestions(){
+  const host=$('categorySuggestions');if(!host)return;
+  if(activeCat==='Все'){host.replaceChildren();return}
+  const list=suggestionCandidates(activeCat).slice(0,5);
+  if(!list.length){host.innerHTML='<div class="suggestions"><b>Подборка изучена</b><div class="sub" style="margin-top:5px">Добавь собственные слова или выбери другую тему.</div></div>';return}
+  host.innerHTML=`<div class="suggestions"><div class="card-head" style="margin-bottom:5px"><span>✦ Можешь добавить</span><span class="sub">${esc(activeCat)}</span></div><div class="sub" style="margin-bottom:8px">Новые идеи появляются после добавления, но в словарь попадают только по твоему выбору</div><div class="suggestion-rows">${list.map(suggestionRow).join('')}</div></div>`;
+  host.querySelectorAll('[data-suggestion]').forEach(row=>{
+    row.querySelector('button').addEventListener('click',()=>{
+      const entry=(CATEGORY_SUGGESTIONS[activeCat]||[]).find(x=>x[0]===row.dataset.suggestion);
+      if(entry)addSuggestedWord(entry[0],entry[1],activeCat,row);
+    });
+  });
+}
+async function addSuggestedWord(term,translation,category,row){
+  if(db.words.some(x=>x.term.toLowerCase()===term.toLowerCase()))return toast('Это слово уже есть в словаре');
+  const item={id:uid(),term,translation,transcription:'',category,example:'',created:Date.now(),level:0,correct:0};
+  db.words.push(item);localStorage.setItem('vocabulary-db',JSON.stringify(db));
+  // Update counters and list without replacing the animated suggestions container.
+  renderHome();renderPhrases();
+  const query=($('wordSearch').value||'').toLowerCase();
+  if((activeCat==='Все'||activeCat===category)&&(`${term} ${translation}`).toLowerCase().includes(query)){
+    const listEl=$('wordList');const entries=db.words.filter(x=>(activeCat==='Все'||x.category===activeCat)&&(`${x.term} ${x.translation} ${x.transcription}`).toLowerCase().includes(query));
+    const sorted=[...entries].sort((a,b)=>sortAsc?a.term.localeCompare(b.term):b.term.localeCompare(a.term));
+    const pos=sorted.findIndex(x=>x.id===item.id);
+    if(pos>=0){const template=document.createElement('template');template.innerHTML=entryHTML(item);const child=template.content.firstElementChild;
+      const old=listEl.querySelectorAll('.entry');if(old.length===0&&listEl.querySelector('.empty'))listEl.replaceChildren();
+      const existing=listEl.querySelectorAll('.entry');if(pos>=existing.length)listEl.append(child);else listEl.insertBefore(child,existing[pos]);
+      $('dictCount').textContent=entries.length+' слов';
+    }
+  }
+  if(row){
+    const host=row.parentElement;row.classList.add('is-replacing');
+    const displayed=new Set([...host.querySelectorAll('[data-suggestion]')].map(x=>x.dataset.suggestion.toLowerCase()));
+    const replacement=suggestionCandidates(category).find(x=>!displayed.has(x[0].toLowerCase()));
+    setTimeout(()=>{
+      if(!row.isConnected)return;
+      if(replacement){const template=document.createElement('template');template.innerHTML=suggestionRow(replacement);
+        const next=template.content.firstElementChild;row.replaceWith(next);
+        next.querySelector('button').addEventListener('click',()=>addSuggestedWord(replacement[0],replacement[1],category,next));
+        next.classList.add('is-appearing');
+      }else row.remove();
+    },180);
+  }
+  toast('Добавлено: '+term);
+  try{let r=await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/'+encodeURIComponent(term));if(r.ok){let d=await r.json(),ph=(d[0]?.phonetics||[]).find(x=>x.text);if(ph?.text){item.transcription=ph.text;localStorage.setItem('vocabulary-db',JSON.stringify(db))}}}catch(e){}
+}
+function toggleSort(){sortAsc=!sortAsc;renderDictionary()}
 function renderPhrases(){let q=($('phraseSearch')?.value||'').toLowerCase();let a=db.phrases.filter(x=>(`${x.term} ${x.translation}`).toLowerCase().includes(q)).sort((x,y)=>x.term.localeCompare(y.term));$('phraseList').innerHTML=a.map(entryHTML).join('')||'<div class="empty"><div class="big">💬</div>Здесь будут твои выражения и устойчивые фразы.</div>'}
 function openDetail(id){let x=[...db.words,...db.phrases].find(e=>e.id===id);if(!x)return;$('detailContent').innerHTML=`<div class="detail-word">${esc(x.term)}</div><div class="detail-trans">${esc(x.translation)}</div>${x.transcription?`<div class="pill">${esc(x.transcription)}</div>`:''}<div class="sub" style="margin-top:17px">КАТЕГОРИЯ</div><b>${esc(x.category||'Без категории')}</b>${x.example?`<div class="sub" style="margin-top:17px">ПРИМЕР</div><div style="margin-top:5px">${esc(x.example)}</div>`:''}<div class="form-actions" style="margin-top:24px"><button class="outline" onclick="speak('${esc(x.term).replace(/'/g,"\\'")}')">🔊 Слушать</button><button class="secondary" onclick="editEntry('${id}')">Изменить</button><button class="outline" onclick="deleteEntry('${id}')">Удалить</button></div>`;$('detailModal').classList.add('show')}function closeDetail(){$('detailModal').classList.remove('show')}function editEntry(id){let type=db.words.some(x=>x.id===id)?'word':'phrase';closeDetail();openForm(type,id)}function deleteEntry(id){if(!confirm('Удалить эту запись?'))return;db.words=db.words.filter(x=>x.id!==id);db.phrases=db.phrases.filter(x=>x.id!==id);closeDetail();persist();toast('Запись удалена')}function speak(t){if(!('speechSynthesis'in window))return toast('Озвучивание не поддерживается');let u=new SpeechSynthesisUtterance(t);u.lang='en-US';speechSynthesis.speak(u)}
 function startPractice(mode){
@@ -1217,34 +1347,22 @@ function showFlashCategoryPicker(){
   $('practiceArea').classList.add('hidden');
   $('flashCategoryPicker').classList.remove('hidden');
   renderPracticeCategoryCarousel();
-  setTimeout(()=>$('flashCategoryPicker').scrollIntoView({behavior:'smooth',block:'start'}),60);
+  window.scrollTo({top:0,behavior:'instant'});
 }
 function renderPracticeCategoryCarousel(){
-  const host=$('flashCategoryPicker');if(!host)return;
-  const names=practiceCategoryList();selectedPracticeCategory=Math.max(0,Math.min(selectedPracticeCategory,names.length-1));
-  const cards=names.map(practiceCategoryMeta);const selected=cards[selectedPracticeCategory];
-  const cardHtml=cards.map((item,i)=>{
-    let pos='is-hidden';
-    const preview=item.preview.length?item.preview.map(w=>`<span>${esc(w)}</span>`).join(''):`<span>Подборка слов</span>`;
-    return `<button type="button" class="category-card ${pos}" style="--tone-a:${item.a};--tone-b:${item.b};--tone-c:${item.c}" onclick="categoryCardClick(${i},event)" onpointerdown="categoryCardPointerDown(event,${i})" onpointermove="categoryCardPointerMove(event)" onpointerup="categoryCardPointerUp(event)" onpointercancel="categoryCardPointerCancel(event)" aria-pressed="${i===selectedPracticeCategory}">
-      <div class="category-card-top"><span>VOCABULARY</span><span>${String(i+1).padStart(2,'0')} / ${String(cards.length).padStart(2,'0')}</span></div>
-      <div class="category-art"><span class="category-art-icon">${item.emoji}</span></div>
-      <div class="category-card-copy"><div class="category-kicker">КОЛЛЕКЦИЯ СЛОВ</div><div class="category-name">${esc(item.name)}</div><div class="category-count"><strong>${item.count}</strong><span>в словаре</span></div></div>
-      <div class="category-preview">${preview}</div><div class="category-card-footer"><span>${timedMode?'ЗАЖМИ И ПОТЯНИ ВНИЗ':'СМАХНИ ДЛЯ ВЫБОРА'}</span><span>${timedMode?'↓':'↗'}</span></div>
-    </button>`;
-  }).join('');
-  const canStart=selected.count>0;
-  const hint=canStart?'Карточки будут только из этой категории.':'В этой категории пока нет слов. Можно подобрать новые в словаре.';
-  host.innerHTML=`<div class="picker-topline"><button class="picker-back" type="button" onclick="leaveFlashFocus()" aria-label="Назад к режимам тренировки">‹</button><div class="picker-heading"><div><div class="eyebrow">РЕЖИМ КАРТОЧЕК</div><h3 id="pickerTitle">Выбери категорию</h3><div class="picker-subtitle" id="pickerSubtitle">Смахивай карточки в стороны</div></div></div></div>
-    <div class="carousel-stage" id="categoryCarousel" role="group" aria-label="Выбор категории" tabindex="0" onpointerdown="carouselPointerDown(event)" onpointerup="carouselPointerUp(event)" onpointercancel="carouselPointerCancel()" onkeydown="carouselKeydown(event)">${cardHtml}
-      <div class="activation-drive" id="activationDrive" aria-hidden="true"><div class="drive-caption">ПОТЯНИ КАРТОЧКУ В СВЕТЯЩИЙСЯ СЛОТ</div><div class="drive-slot" id="activationDriveSlot"></div></div>
-    </div>
-    <div class="carousel-controls" id="carouselControls"><button class="carousel-arrow" type="button" aria-label="Предыдущая категория" onclick="movePracticeCategory(-1)">‹</button><div class="carousel-dots">${cards.map((_,i)=>`<button type="button" class="carousel-dot ${i===selectedPracticeCategory?'active':''}" aria-label="Категория ${i+1}" onclick="selectPracticeCategory(${i})"></button>`).join('')}</div><button class="carousel-arrow" type="button" aria-label="Следующая категория" onclick="movePracticeCategory(1)">›</button></div>
-    <div class="category-selection" id="categorySelection"><div class="selection-overline">ВЫБРАННАЯ КАТЕГОРИЯ</div><div class="selection-row"><div class="selection-name" id="selectedCategoryName">${esc(selected.name)}</div><div class="selection-count" id="selectedCategoryCount">${wordCountLabel(selected.count)}</div></div><div class="selection-hint" id="selectedCategoryHint">${hint}</div>
-      <div class="selection-actions"><button type="button" class="primary category-start" id="selectedCategoryAction" onclick="${canStart?'beginFlashPractice()':'openSelectedCategoryInDictionary()'}">${canStart?'Начать тренировку':'Подобрать слова'}</button><button type="button" class="timed-mode-button" id="timedModeButton" onclick="toggleTimedMode(true)" ${canStart?'':'disabled'}><span>◷</span> На время</button></div>
-      <div class="timed-options hidden" id="timedOptions"><div class="timed-options-head"><span>Длительность раунда</span><span>Таймер стартует при запуске</span></div><div class="duration-choices"><button type="button" class="duration-choice ${timedDuration===30?'active':''}" data-duration="30" onclick="setTimedDuration(30)">30 сек</button><button type="button" class="duration-choice ${timedDuration===60?'active':''}" data-duration="60" onclick="setTimedDuration(60)">60 сек</button><button type="button" class="duration-choice ${timedDuration===90?'active':''}" data-duration="90" onclick="setTimedDuration(90)">90 сек</button></div><div class="timed-instruction">Зажми центральную карточку и потяни её вниз, пока она не войдёт в светящийся слот. Таймер запустится после погружения карточки.</div><button type="button" class="timed-cancel" onclick="toggleTimedMode(false)">← Вернуться к выбору категорий</button></div>
-    </div>`;
-  requestAnimationFrame(updatePracticeCategoryCarousel);
+ const host=$('flashCategoryPicker');if(!host)return;
+ const names=practiceCategoryList();selectedPracticeCategory=Math.max(0,Math.min(selectedPracticeCategory,names.length-1));
+ const cards=names.map(practiceCategoryMeta),selected=cards[selectedPracticeCategory];
+ const cardHtml=cards.map((item,i)=>`<button type="button" class="category-card is-hidden" style="--tone-a:${item.a};--tone-b:${item.b};--tone-c:${item.c}" onclick="categoryCardClick(${i},event)" onpointerdown="categoryCardPointerDown(event,${i})" onpointermove="categoryCardPointerMove(event)" onpointerup="categoryCardPointerUp(event)" onpointercancel="categoryCardPointerCancel(event)" aria-pressed="${i===selectedPracticeCategory}">
+  <span class="category-center-icon">${item.emoji}</span><span class="category-name">${esc(item.name)}</span><span class="category-count">${wordCountLabel(item.count)}</span><span class="category-down">↓</span></button>`).join('');
+ host.innerHTML=`<div class="focus-scene"><div class="focus-heading"><button class="picker-back" onclick="leaveFlashFocus()" aria-label="Вернуться">‹</button><div class="focus-label"><strong id="pickerTitle">Выбор категории</strong><span id="pickerSubtitle">Листай категории</span></div><button class="picker-back" type="button" onclick="openSelectedCategoryInDictionary()" aria-label="Открыть словарь">···</button></div>
+ <div class="focus-ambient" aria-hidden="true"></div>
+ <div class="carousel-stage" id="categoryCarousel" role="group" aria-label="Категории" tabindex="0" onpointerdown="carouselPointerDown(event)" onpointerup="carouselPointerUp(event)" onpointercancel="carouselPointerCancel()" onkeydown="carouselKeydown(event)">${cardHtml}
+ <div class="activation-drive" id="activationDrive" aria-hidden="true"><div class="drive-caption">ПОТЯНИ КАРТОЧКУ В СЛОТ</div><div class="drive-slot" id="activationDriveSlot"></div></div></div>
+ <div class="focus-bottom" id="categorySelection"><div class="carousel-controls" id="carouselControls"><button class="carousel-arrow" onclick="movePracticeCategory(-1)">‹</button><div class="carousel-dots">${cards.map((_,i)=>`<button class="carousel-dot ${i===selectedPracticeCategory?'active':''}" aria-label="Категория ${i+1}" onclick="selectPracticeCategory(${i})"></button>`).join('')}</div><button class="carousel-arrow" onclick="movePracticeCategory(1)">›</button></div><div class="focus-category-name" id="selectedCategoryName">${esc(selected.name)}</div><div id="selectedCategoryCount" class="focus-category-count">${wordCountLabel(selected.count)}</div>
+ <div id="selectedCategoryHint" class="focus-hint"></div><div class="selection-actions"><button class="primary category-start" id="selectedCategoryAction" onclick="beginFlashPractice()">Начать</button><button class="timed-mode-button" id="timedModeButton" onclick="toggleTimedMode(true)">◷ На время</button></div>
+ <div id="timedOptions" class="timed-options hidden"><div class="duration-choices"><button class="duration-choice" data-duration="30" onclick="setTimedDuration(30)">30 сек</button><button class="duration-choice" data-duration="60" onclick="setTimedDuration(60)">60 сек</button><button class="duration-choice" data-duration="90" onclick="setTimedDuration(90)">90 сек</button></div><button class="timed-cancel" onclick="toggleTimedMode(false)">Отменить режим на время</button></div></div></div>`;
+ requestAnimationFrame(updatePracticeCategoryCarousel);
 }
 function updatePracticeCategoryCarousel(){
   const names=practiceCategoryList();if(!names.length)return;
@@ -1261,7 +1379,7 @@ function updatePracticeCategoryCarousel(){
   });
   stage.classList.toggle('timer-mode',timedMode);stage.style.setProperty('--charge','0');
   $('carouselControls')?.classList.toggle('hidden',timedMode);
-  $('categorySelection')?.classList.toggle('timed-active',timedMode);
+  $('categorySelection')?.classList.toggle('timed-active',timedMode);document.querySelector('.focus-scene')?.classList.toggle('is-timed',timedMode);
   $('timedOptions')?.classList.toggle('hidden',!timedMode);
   $('pickerTitle').textContent=timedMode?'Режим на время':'Выбери категорию';
   $('pickerSubtitle').textContent=timedMode?'Потяни карточку вниз':'Смахивай карточки в стороны';
@@ -1318,7 +1436,7 @@ function categoryCardPointerMove(event){
   if(!timedDragState||event.pointerId!==timedDragState.pointerId)return;
   const state=timedDragState,stage=$('categoryCarousel'),slot=$('activationDriveSlot');if(!stage||!slot)return;
   const dx=event.clientX-state.startX,dy=event.clientY-state.startY;
-  const baseY=Math.max(0,Math.min(210,dy));
+  const baseY=Math.max(0,Math.min(Math.max(210,stage.clientHeight*.56),dy));
   const cardRect=state.card.getBoundingClientRect(),slotRect=slot.getBoundingClientRect();
   const remainingGap=Math.max(0,state.initialGap-baseY);
   const approachDistance=Math.max(76,state.initialGap+15);
@@ -1365,7 +1483,7 @@ function beginFlashPractice(){
   const selectedWords=name==='Все слова'?[...db.words]:db.words.filter(x=>x.category===name);
   if(!selectedWords.length){toast('В этой категории пока нет слов');return}
   activePracticeCategory=name;practiceItems=selectedWords.sort(()=>Math.random()-.5);practiceIndex=0;correctCount=0;practiceMode='flash';flipped=false;flashAwaitingNext=false;flashTransitioning=false;
-  $('flashCategoryPicker').classList.add('hidden');$('practiceArea').classList.remove('hidden');$('practiceArea').classList.add('flash-session');$('practice').classList.add('flash-focus');renderPractice();$('practiceArea').scrollIntoView({behavior:'smooth',block:'center'});
+  $('flashCategoryPicker').classList.add('hidden');$('practiceArea').classList.remove('hidden');$('practiceArea').classList.add('flash-session');$('practice').classList.add('flash-focus');renderPractice();window.scrollTo({top:0,behavior:'instant'});
 }
 function stopTimedClock(){if(timedInterval){clearInterval(timedInterval);timedInterval=null}}
 function formatTimer(seconds){const safe=Math.max(0,Math.ceil(seconds));return String(Math.floor(safe/60)).padStart(2,'0')+':'+String(safe%60).padStart(2,'0')}
@@ -1394,7 +1512,7 @@ function finishTimedPractice(reason){
   const subtitle=reason==='time'?'Раунд завершён. Отличная работа!':'Ты успел пройти всю подборку до окончания времени.';
   $('practiceArea').innerHTML=`<div class="timer-result"><div class="timer-result-icon">◷</div><div class="eyebrow">${esc(activePracticeCategory)} · ${activeTimedDuration} СЕКУНД</div><h2>${title}</h2><div class="sub">${subtitle}</div><div class="timer-result-stats"><div class="timer-result-stat"><strong>${correctCount}</strong><span>Знаю</span></div><div class="timer-result-stat"><strong>${attempted}/${total}</strong><span>Карточек пройдено</span></div></div><div class="sub">Можно повторить раунд или выбрать другую категорию.</div></div><button class="primary full" onclick="repeatTimedPractice()">Повторить раунд</button><button class="outline full" style="margin-top:9px" onclick="returnToCategoryPicker()">Выбрать другую категорию</button>`;
 }
-function repeatTimedPractice(){flashAwaitingNext=false;flashTransitioning=false;$('practiceArea').classList.remove('flash-session');selectedPracticeCategory=Math.max(0,practiceCategoryList().indexOf(activePracticeCategory));timedMode=true;$('practiceArea').classList.add('hidden');$('flashCategoryPicker').classList.remove('hidden');renderPracticeCategoryCarousel();$('flashCategoryPicker').scrollIntoView({behavior:'smooth',block:'start'});toast('Потяни карточку в светящийся слот, чтобы начать новый раунд')}
+function repeatTimedPractice(){flashAwaitingNext=false;flashTransitioning=false;$('practiceArea').classList.remove('flash-session');selectedPracticeCategory=Math.max(0,practiceCategoryList().indexOf(activePracticeCategory));timedMode=true;$('practiceArea').classList.add('hidden');$('flashCategoryPicker').classList.remove('hidden');renderPracticeCategoryCarousel();window.scrollTo({top:0,behavior:'instant'});toast('Потяни карточку в светящийся слот, чтобы начать новый раунд')}
 function returnToCategoryPicker(){flashAwaitingNext=false;flashTransitioning=false;$('practiceArea').classList.remove('flash-session');stopTimedClock();timedSessionActive=false;timedMode=false;$('practiceArea').classList.add('hidden');$('flashCategoryPicker').classList.remove('hidden');renderPracticeCategoryCarousel();$('flashCategoryPicker').scrollIntoView({behavior:'smooth',block:'start'})}
 function closePracticeSession(){flashAwaitingNext=false;flashTransitioning=false;$('practiceArea').classList.remove('flash-session');stopTimedClock();timedSessionActive=false;$('practiceArea').classList.add('hidden');if(practiceMode==='flash')showFlashCategoryPicker()}
 
